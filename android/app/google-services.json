@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "792868097322",
+    "project_id": "ftcforum",
+    "storage_bucket": "ftcforum.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:792868097322:android:24edf4b3829e71bb982253",
+        "android_client_info": {
+          "package_name": "com.example.ftc_forum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "792868097322-btqpm39tvjhi53ah3bnjmicfbk8d1fek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNzaUcekwiLZMLYNH2rHHSdGr-jJed0hE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "792868097322-btqpm39tvjhi53ah3bnjmicfbk8d1fek.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
