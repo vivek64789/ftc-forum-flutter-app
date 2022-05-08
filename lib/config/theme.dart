@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 ThemeData theme() {
   return ThemeData(
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: const Color.fromARGB(244, 244, 244, 244),
     fontFamily: GoogleFonts.poppins().fontFamily,
     textTheme: textTheme(),
     colorScheme: colorScheme(),
@@ -13,7 +13,7 @@ ThemeData theme() {
 ColorScheme colorScheme() {
   return const ColorScheme(
       brightness: Brightness.light,
-      primary: Colors.purple,
+      primary: Color.fromRGBO(255, 0, 154, 1),
       onPrimary: Colors.white,
       secondary: Colors.grey,
       onSecondary: Colors.white,
@@ -26,55 +26,55 @@ ColorScheme colorScheme() {
 }
 
 TextTheme textTheme() {
-  return TextTheme(
+  return const TextTheme(
     headline1: TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.bold,
       fontSize: 36,
-      fontFamily: GoogleFonts.poppins().fontFamily,
+      // fontFamily: GoogleFonts.poppins().fontFamily,
     ),
     headline2: TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.bold,
       fontSize: 22,
-      fontFamily: GoogleFonts.poppins().fontFamily,
+      // fontFamily: GoogleFonts.poppins().fontFamily,
     ),
     headline3: TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.bold,
       fontSize: 18,
-      fontFamily: GoogleFonts.poppins().fontFamily,
+      // fontFamily: GoogleFonts.poppins().fontFamily,
     ),
     headline4: TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.bold,
       fontSize: 16,
-      fontFamily: GoogleFonts.poppins().fontFamily,
+      // fontFamily: GoogleFonts.poppins().fontFamily,
     ),
     headline5: TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.bold,
       fontSize: 14,
-      fontFamily: GoogleFonts.poppins().fontFamily,
+      // fontFamily: GoogleFonts.poppins().fontFamily,
     ),
     headline6: TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.normal,
       fontSize: 14,
-      fontFamily: GoogleFonts.poppins().fontFamily,
+      // fontFamily: GoogleFonts.poppins().fontFamily,
     ),
     bodyText1: TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.normal,
       height: 1.75,
       fontSize: 12,
-      fontFamily: GoogleFonts.poppins().fontFamily,
+      // fontFamily: GoogleFonts.poppins().fontFamily,
     ),
     bodyText2: TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.normal,
       fontSize: 10,
-      fontFamily: GoogleFonts.poppins().fontFamily,
+      // fontFamily: GoogleFonts.poppins().fontFamily,
     ),
   );
 }

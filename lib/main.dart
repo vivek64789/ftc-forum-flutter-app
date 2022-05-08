@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ftc_forum/bloc_observer.dart';
 import 'package:ftc_forum/blocs/app/app_bloc.dart';
+import 'package:ftc_forum/config/route_generator.dart';
 import 'package:ftc_forum/config/routes.dart';
 import 'package:ftc_forum/config/theme.dart';
 import 'package:ftc_forum/firebase_options.dart';
 import 'package:ftc_forum/repositories/repositories.dart';
+import 'package:ftc_forum/screens/screens.dart';
+import 'package:ftc_forum/screens/sections/section_screen.dart';
 
 Future<void> main() {
   return BlocOverrides.runZoned(
@@ -50,6 +53,11 @@ class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        RegisterScreen.routeName: (context) => const RegisterScreen(),
+        SectionScreen.routeName: (context) => SectionScreen(),
+      },
+      onGenerateRoute: RouteGenerator.generateRoute,
       theme: theme(),
       home: FlowBuilder(
           state: context.select((AppBloc bloc) => bloc.state.status),
