@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ftc_forum/widgets/question_card.dart';
-import 'package:ftc_forum/widgets/replies_thread.dart';
-import 'package:ftc_forum/widgets/reply_card.dart';
-import 'package:ftc_forum/widgets/vote_button.dart';
-import 'package:ftc_forum/widgets/write_question.dart';
 
 class SectionScreen extends StatefulWidget {
   SectionScreen({Key? key}) : super(key: key);
