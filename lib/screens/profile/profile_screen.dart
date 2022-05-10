@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ftc_forum/screens/admin/category/admin_category_screen.dart';
 import 'package:ftc_forum/widgets/avatar_image.dart';
 import 'package:ftc_forum/widgets/rounded_button.dart';
 
@@ -70,12 +71,57 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: size.height * 0.05),
+              SizedBox(height: size.height * 0.01),
+              // divider
+              AdminSettings(size: size),
               RoundedButton(text: "Logout", press: () {})
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class AdminSettings extends StatelessWidget {
+  const AdminSettings({
+    Key? key,
+    required this.size,
+  }) : super(key: key);
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Divider(
+          color: Colors.grey[300],
+        ),
+        const Text("Admin Settings"),
+        SizedBox(height: size.height * 0.01),
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return AdminCategoryScreen();
+                },
+              ),
+            );
+          },
+          child: const Text("Manage Categories"),
+        ),
+        TextButton(
+          onPressed: () {
+            
+          },
+          child: const Text("Manage Sections"),
+        ),
+        SizedBox(height: size.height * 0.01),
+      ],
     );
   }
 }
