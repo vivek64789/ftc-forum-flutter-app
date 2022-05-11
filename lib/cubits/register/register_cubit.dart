@@ -17,15 +17,16 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
   void nameChanged(String name) {
-    emit(state.copyWith(password: name, status: RegisterStatus.initial));
+    emit(state.copyWith(name: name, status: RegisterStatus.initial));
+    // emit(state.copyWith(name: name, status: RegisterStatus.initial));
   }
 
   void phoneChanged(String phone) {
-    emit(state.copyWith(password: phone, status: RegisterStatus.initial));
+    emit(state.copyWith(phone: phone, status: RegisterStatus.initial));
   }
 
   void dobChanged(String dob) {
-    emit(state.copyWith(password: dob, status: RegisterStatus.initial));
+    emit(state.copyWith(dob: dob, status: RegisterStatus.initial));
   }
 
   Future<void> registerWithEmailAndPassword() async {

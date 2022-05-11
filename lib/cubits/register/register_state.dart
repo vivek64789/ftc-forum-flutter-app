@@ -8,13 +8,13 @@ enum RegisterStatus {
 }
 
 class RegisterState extends Equatable {
-  final String email;
-  final String password;
-  final String phone;
-  final String dob;
-  final String name;
-  final RegisterStatus status;
-  const RegisterState({
+  String email;
+  String password;
+  String phone;
+  String dob;
+  String name;
+  RegisterStatus status;
+  RegisterState({
     required this.name,
     required this.dob,
     required this.phone,
@@ -24,10 +24,10 @@ class RegisterState extends Equatable {
   });
 
   @override
-  List<Object> get props => [email, password, status];
+  List<Object> get props => [email, password, status, name, dob, phone];
 
   factory RegisterState.initial() {
-    return const RegisterState(
+    return RegisterState(
       phone: '',
       name: '',
       dob: '',

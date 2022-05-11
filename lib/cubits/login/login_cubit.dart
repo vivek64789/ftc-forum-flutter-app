@@ -31,4 +31,14 @@ class LoginCubit extends Cubit<LoginState> {
       emit(state.copyWith(status: LoginStatus.error));
     }
   }
+
+  Future<void> fetchRole(String uid) async {
+    try {
+      final result = await _authRepository.getIsAdmin(uid);
+      print(result);
+      emit(state.copyWith(isAdmin: result));
+    } catch (e) {
+      print("Error here");
+    }
+  }
 }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ftc_forum/cubits/login/login_cubit.dart';
+import 'package:ftc_forum/repositories/auth_repository.dart';
 import 'package:ftc_forum/screens/categories/categories_screen.dart';
 import 'package:ftc_forum/screens/homescreen/home_screen.dart';
 import 'package:ftc_forum/screens/profile/profile_screen.dart';
@@ -16,7 +19,10 @@ class _MainScreenState extends State<MainScreen> {
   final screen = [
     HomeScreen(),
     const CategoriesScreen(),
-    const ProfileScreen(),
+     BlocProvider(
+      create: (context) => LoginCubit(context.read<AuthRepository>()),
+      child: ProfileScreen(),
+    ),
   ];
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:ftc_forum/models/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 
 class AuthRepository {
   final firebase_auth.FirebaseAuth? _firebaseAuth;
+  final firestore.FirebaseFirestore _firestore =
+      firestore.FirebaseFirestore.instance;
 
   AuthRepository({firebase_auth.FirebaseAuth? firebaseAuth})
       : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance;
@@ -24,12 +29,33 @@ class AuthRepository {
     required String phone,
     required String dob,
   }) async {
+    print("name: $name, Phone: $phone, DOB: $dob");
     try {
       await _firebaseAuth!
-          .createUserWithEmailAndPassword(email: email, password: password);
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) {
+        updateUserData(
+            name: name, phone: phone, dob: dob, uid: value.user!.uid);
+      });
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<void> updateUserData({
+    required String uid,
+    required String name,
+    required String phone,
+    required String dob,
+    String role = "user",
+  }) async {
+    await _firestore.collection("users").doc(uid).set({
+      "uid": uid,
+      "name": name,
+      "phone": phone,
+      "dob": dob,
+      "role": role,
+    });
   }
 
   Future<firebase_auth.UserCredential> logInWithEmailAndPassword(
@@ -50,6 +76,19 @@ class AuthRepository {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<bool> getIsAdmin(String uid) async {
+    bool isAdmin = false;
+    final response = await _firestore.collection("users").doc(uid).get();
+    if (response.exists) {
+      Map<String, dynamic>? data = response.data();
+      var role = data?['role'];
+      if (role == "admin") {
+        isAdmin = true;
+      }
+    }
+    return isAdmin;
   }
 }
 
