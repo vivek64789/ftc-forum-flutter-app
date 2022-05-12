@@ -3,11 +3,9 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:ftc_forum/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:ftc_forum/models/question.dart';
-import 'package:ftc_forum/models/question_category.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserRepository {
@@ -29,6 +27,12 @@ class UserRepository {
     return snapshot;
   }
 
+  Stream<firestore.QuerySnapshot<Map<String, dynamic>>> fetchQuestions() {
+    final snapshot = _firestore.collection("questions").snapshots();
+
+    return snapshot;
+  }
+
   Stream<firestore.QuerySnapshot<Map<String, dynamic>>>
       fetchSectionsByCategoryId(String id) {
     final snapshot = _firestore
@@ -39,7 +43,6 @@ class UserRepository {
     return snapshot;
   }
 
- 
   Future<void> createQuestion({
     required Question question,
   }) async {
@@ -47,7 +50,7 @@ class UserRepository {
       await _firestore.collection("questions").add({
         'uid': question.uid,
         'title': question.title,
-        'description': question.description,
+        'description': question.jsonDescription,
         'date': question.date,
         'section': question.section!.id,
         'category': question.category!.id,
@@ -56,6 +59,12 @@ class UserRepository {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<User> fetchUserById(String id) async {
+    final snapshot = await _firestore.collection("users").doc(id).get();
+
+    return User.fromJson(snapshot.data());
   }
 
   Future<String> uploadImage({required String id, required String name}) async {

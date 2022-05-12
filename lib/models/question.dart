@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:ftc_forum/models/question_category.dart';
 import 'package:ftc_forum/models/section.dart';
@@ -6,7 +8,8 @@ class Question extends Equatable {
   final String id;
   final String uid;
   final String? title;
-  final String? description;
+  final List<dynamic>? description;
+  final String? jsonDescription;
   final DateTime? date;
   final int? upVotes;
   final List<String>? upVotedBy;
@@ -20,6 +23,7 @@ class Question extends Equatable {
   const Question({
     required this.id,
     required this.uid,
+    this.jsonDescription,
     this.upVotedBy,
     this.downVotedBy,
     this.title,
@@ -53,5 +57,19 @@ class Question extends Equatable {
         upVotedBy,
         downVotedBy,
         category,
+        jsonDescription,
       ];
+
+  static Question fromMap(Map<String, dynamic> map) {
+    return Question(
+      id: map['uid'] ?? '',
+      uid: map['uid'] ?? '',
+      title: map['title'] ?? '',
+      description: jsonDecode(map['description']) as List<dynamic>,
+      date: DateTime.fromMicrosecondsSinceEpoch(map['date'].seconds * 1000000),
+      upVotes: map['upVotes'] ?? 0,
+      downVotes: map['downVotes'] ?? 0,
+      replyCount: map['replyCount'] ?? 0,
+    );
+  }
 }

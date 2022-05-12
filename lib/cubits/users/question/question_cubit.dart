@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:ftc_forum/models/question.dart';
 import 'package:ftc_forum/models/question_category.dart';
 import 'package:ftc_forum/models/section.dart';
+import 'package:ftc_forum/models/user_model.dart';
 import 'package:ftc_forum/repositories/user_repository.dart';
 
 part 'question_state.dart';
@@ -96,6 +97,13 @@ class QuestionCubit extends Cubit<QuestionState> {
     return result;
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> fetchQuestions() {
+    emit(state.copyWith(status: QuestionStatus.loading));
+    final result = _userRepository.fetchQuestions();
+    emit(state.copyWith(status: QuestionStatus.success));
+    return result;
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> fetchSectionsByCategoryId() {
     emit(state.copyWith(status: QuestionStatus.loading));
     final result =
@@ -111,7 +119,7 @@ class QuestionCubit extends Cubit<QuestionState> {
       id: "",
       uid: state.uid,
       title: state.title,
-      description: state.description,
+      jsonDescription: state.description,
       date: DateTime.now(),
       section: state.section,
       category: state.category,
@@ -129,6 +137,12 @@ class QuestionCubit extends Cubit<QuestionState> {
     ));
   }
 
+  Future<User> fetchUserById(String id) async {
+    emit(state.copyWith(status: QuestionStatus.loading));
+    final result = await _userRepository.fetchUserById(id);
+    return result;
+  }
+
   Future<void> uploadImage(context) async {
     emit(state.copyWith(status: QuestionStatus.loading));
     try {
@@ -139,7 +153,6 @@ class QuestionCubit extends Cubit<QuestionState> {
       )
           .then((value) {
         imageUrlChanged(value);
-        print("This is url $value");
         emit(state.copyWith(status: QuestionStatus.success));
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Image uploaded successfully")));

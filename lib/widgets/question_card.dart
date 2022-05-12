@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:ftc_forum/constants.dart';
 import 'package:ftc_forum/widgets/replies_thread.dart';
 import 'package:ftc_forum/widgets/vote_button.dart';
 
 class QuestionCard extends StatefulWidget {
   final String profileUrl;
-  final String date;
+  final String name;
+  final DateTime date;
   final String title;
-  final String description;
+  final List<dynamic> description;
   final String upvotes;
   final String downvotes;
   final String comments;
@@ -16,6 +18,7 @@ class QuestionCard extends StatefulWidget {
   final Color bgColor, textColor;
   QuestionCard({
     Key? key,
+    required this.name,
     required this.profileUrl,
     required this.date,
     required this.title,
@@ -35,9 +38,11 @@ class QuestionCard extends StatefulWidget {
 
 class _QuestionCardState extends State<QuestionCard> {
   bool isCommentActive = false;
-
   @override
   Widget build(BuildContext context) {
+    final quill.QuillController _quillController = quill.QuillController(
+        document: quill.Document.fromJson(widget.description),
+        selection: const TextSelection.collapsed(offset: 0));
     Size size = MediaQuery.of(context).size;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -71,11 +76,15 @@ class _QuestionCardState extends State<QuestionCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Bibekanand Kushwaha",
+                        widget.name,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       Text(
-                        "2022-03-4",
+                        widget.date.year.toString() +
+                            "-" +
+                            widget.date.month.toString() +
+                            "-" +
+                            widget.date.day.toString(),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
@@ -92,13 +101,11 @@ class _QuestionCardState extends State<QuestionCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "What is Programming",
-                      style: Theme.of(context).textTheme.titleMedium,
+                      widget.title,
+                      style: Theme.of(context).textTheme.displaySmall,
                     ),
-                    Text(
-                      "Programming is something that you don't know",
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
+                    quill.QuillEditor.basic(
+                        controller: _quillController, readOnly: true)
                   ],
                 ),
               ),

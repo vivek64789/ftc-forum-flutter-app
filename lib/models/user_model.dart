@@ -3,11 +3,18 @@ import 'package:equatable/equatable.dart';
 class User extends Equatable {
   final String id;
   final String? name;
-  final String? email;
+  final String? dob;
   final String? photo;
   final String? role;
+  final String? email;
 
-  const User({required this.id, this.name, this.email, this.photo, this.role});
+  const User(
+      {required this.id,
+      this.name,
+      this.dob,
+      this.photo,
+      this.role,
+      this.email});
 
   static const empty = User(id: '');
 
@@ -15,5 +22,14 @@ class User extends Equatable {
   bool get isNotEmpty => this != User.empty;
 
   @override
-  List<Object?> get props => [id, name, email, photo, role];
+  List<Object?> get props => [id, name, dob, photo, role, email];
+
+  static User fromJson(Map<String, dynamic>? json) {
+    return User(
+        id: json!['uid'] as String,
+        name: json['name'] as String?,
+        dob: json['dob'] as String?,
+        photo: json['photo'] as String?,
+        role: json['role'] as String?);
+  }
 }

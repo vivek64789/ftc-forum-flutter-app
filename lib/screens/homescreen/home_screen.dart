@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ftc_forum/blocs/app/app_bloc.dart';
 import 'package:ftc_forum/cubits/users/question/question_cubit.dart';
+import 'package:ftc_forum/models/question.dart';
+import 'package:ftc_forum/models/user_model.dart';
 import 'package:ftc_forum/repositories/user_repository.dart';
 import 'package:ftc_forum/widgets/question_card.dart';
 import 'package:ftc_forum/widgets/replies_thread.dart';
@@ -25,38 +29,73 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final _appBloc = BlocProvider.of<AppBloc>(context);
+    final _questionCubit = BlocProvider.of<QuestionCubit>(context);
+
     return Scaffold(
       appBar: AppBar(centerTitle: true, title: const Text('FTC Forum Feed')),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
-        child: Center(
-          child: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                QuestionCard(
-                  profileUrl: "profileUrl",
-                  date: "date",
-                  title: "title",
-                  description: "description",
-                  onPress: () {},
-                ),
-                QuestionCard(
-                  profileUrl: "profileUrl",
-                  date: "date",
-                  title: "title",
-                  description: "description",
-                  onPress: () {},
-                ),
-                QuestionCard(
-                  profileUrl: "profileUrl",
-                  date: "date",
-                  title: "title",
-                  description: "description",
-                  onPress: () {},
-                ),
-              ],
-            ),
+        child: Container(
+          height: size.height,
+          child: Center(
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: _questionCubit.fetchQuestions(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  }
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        final doc = snapshot.data!.docs[index];
+                        // print(doc.data());
+                        final question = Question.fromMap(doc.data());
+                        print(question.description);
+                        // print(question);
+                        final user = _questionCubit.fetchUserById(question.uid);
+                        return FutureBuilder<User>(
+                            future: user,
+                            builder: (userContext, userSnapshot) {
+                              if (userSnapshot.hasError) {
+                                return Center(
+                                  child: Text('Error: ${userSnapshot.error}'),
+                                );
+                              }
+                              if (!userSnapshot.hasData) {
+                                return Center(
+                                  child: Container(
+                                      margin: EdgeInsets.all(size.height * 0.1),
+                                      child: const CircularProgressIndicator()),
+                                );
+                              }
+                              return BlocBuilder<QuestionCubit, QuestionState>(
+                                builder: (context, state) {
+                                  return QuestionCard(
+                                    profileUrl:
+                                        userSnapshot.data!.photo.toString(),
+                                    name: userSnapshot.data!.name.toString(),
+                                    date: question.date as DateTime,
+                                    title: question.title.toString(),
+                                    description:
+                                        question.description as List<dynamic>,
+                                    upvotes: question.upVotes.toString(),
+                                    downvotes: question.downVotes.toString(),
+                                    comments: question.replyCount.toString(),
+                                    onPress: () {},
+                                  );
+                                },
+                              );
+                            });
+                      });
+                }),
           ),
         ),
       ),
