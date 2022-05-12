@@ -57,7 +57,41 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      floatingActionButton: WriteQuestion(size: size),
+      floatingActionButton: Container(
+        width: size.width * 0.3,
+        padding: EdgeInsets.all(size.height * 0.005),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: BorderRadius.circular(size.height * 0.01),
+        ),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => WriteQuestion(
+                  size: size,
+                ),
+              ),
+            );
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.add,
+                color: Theme.of(context).colorScheme.background,
+                size: size.height * 0.03,
+              ),
+              Text(
+                "Ask a question",
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.background),
+              ),
+            ],
+          ),
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }

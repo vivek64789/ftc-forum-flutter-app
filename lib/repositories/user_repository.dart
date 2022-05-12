@@ -9,11 +9,11 @@ import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:ftc_forum/models/question_category.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AdminRepository {
+class UserRepository {
   final firestore.FirebaseFirestore _firestore =
       firestore.FirebaseFirestore.instance;
 
-  AdminRepository();
+  UserRepository();
 
   var currentUser = User.empty;
 
@@ -27,6 +27,24 @@ class AdminRepository {
     final snapshot = _firestore.collection("sections").snapshots();
 
     return snapshot;
+  }
+
+  Stream<firestore.QuerySnapshot<Map<String, dynamic>>>
+      streamSectionsByCategoryId(String id) {
+    final snapshot = _firestore
+        .collection("sections")
+        .where('categoryId', isEqualTo: id)
+        .snapshots();
+
+    return snapshot;
+  }
+
+  Future<firestore.Query<Map<String, dynamic>>> fetchSectionsByCategoryId(
+      String id) async {
+    final data =
+        _firestore.collection("sections").where('categoryId', isEqualTo: id);
+
+    return data;
   }
 
   Future<void> createCategory({

@@ -2,13 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:ftc_forum/repositories/admin_repository.dart';
+import 'package:ftc_forum/repositories/user_repository.dart';
 
 part 'category_state.dart';
 
 class CategoryCubit extends Cubit<CategoryState> {
-  AdminRepository _adminRepository;
-  CategoryCubit(this._adminRepository) : super(CategoryState.initial());
+  UserRepository _userRepository;
+  CategoryCubit(this._userRepository) : super(CategoryState.initial());
 
   void categoryNameChanged(String categoryName) {
     emit(
@@ -23,7 +23,7 @@ class CategoryCubit extends Cubit<CategoryState> {
     if (state.status == CategoryStatus.loading) return;
     emit(state.copyWith(status: CategoryStatus.loading));
     try {
-      await _adminRepository.createCategory(categoryName: state.categoryName);
+      await _userRepository.createCategory(categoryName: state.categoryName);
       emit(state.copyWith(status: CategoryStatus.success));
       Navigator.of(context).pop();
       // show snackbar
@@ -39,7 +39,7 @@ class CategoryCubit extends Cubit<CategoryState> {
     if (state.status == CategoryStatus.loading) return;
     emit(state.copyWith(status: CategoryStatus.loading));
     try {
-      await _adminRepository.updateCategory(
+      await _userRepository.updateCategory(
           id: id, categoryName: state.categoryName);
       emit(state.copyWith(status: CategoryStatus.success));
       Navigator.of(context).pop();
@@ -54,7 +54,7 @@ class CategoryCubit extends Cubit<CategoryState> {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> fetchCategories() {
     emit(state.copyWith(status: CategoryStatus.loading));
-    final result = _adminRepository.fetchCategories();
+    final result = _userRepository.fetchCategories();
     emit(state.copyWith(status: CategoryStatus.success));
     return result;
   }
@@ -62,7 +62,7 @@ class CategoryCubit extends Cubit<CategoryState> {
   Future<void> deleteCategory(String id, BuildContext context) async {
     emit(state.copyWith(status: CategoryStatus.loading));
     try {
-      _adminRepository.deleteCategory(id: id);
+      _userRepository.deleteCategory(id: id);
       emit(state.copyWith(status: CategoryStatus.success));
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Category deleted successfully'),

@@ -3,14 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:ftc_forum/models/question_category.dart';
-import 'package:ftc_forum/repositories/admin_repository.dart';
-import 'package:ftc_forum/widgets/question_card.dart';
+import 'package:ftc_forum/repositories/user_repository.dart';
 
 part 'section_state.dart';
 
 class SectionCubit extends Cubit<SectionState> {
-  AdminRepository _adminRepository;
-  SectionCubit(this._adminRepository) : super(SectionState.initial());
+  UserRepository _userRepository;
+  SectionCubit(this._userRepository) : super(SectionState.initial());
 
   void sectionNameChanged({required String sectionName}) {
     emit(
@@ -30,12 +29,23 @@ class SectionCubit extends Cubit<SectionState> {
     );
   }
 
+  void imageUrlChanged({required String imageUrl}) {
+    emit(
+      state.copyWith(
+        imageUrl: imageUrl,
+        status: SectionStatus.initial,
+      ),
+    );
+  }
+
   Future<void> addSection(context) async {
     if (state.status == SectionStatus.loading) return;
     emit(state.copyWith(status: SectionStatus.loading));
     try {
-      await _adminRepository.createSection(
-          sectionName: state.sectionName, category: state.category);
+      await _userRepository.createSection(
+          sectionName: state.sectionName,
+          category: state.category,
+          imageUrl: state.imageUrl);
       emit(state.copyWith(status: SectionStatus.success));
       Navigator.of(context).pop();
       // show snackbar
@@ -51,8 +61,12 @@ class SectionCubit extends Cubit<SectionState> {
     if (state.status == SectionStatus.loading) return;
     emit(state.copyWith(status: SectionStatus.loading));
     try {
-      await _adminRepository.updateSection(
-          id: id, sectionName: state.sectionName, category: state.category);
+      await _userRepository.updateSection(
+        id: id,
+        sectionName: state.sectionName,
+        category: state.category,
+        imageUrl: state.imageUrl,
+      );
       emit(state.copyWith(status: SectionStatus.success));
       Navigator.of(context).pop();
       // show snackbar
@@ -66,7 +80,7 @@ class SectionCubit extends Cubit<SectionState> {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> fetchSections() {
     emit(state.copyWith(status: SectionStatus.loading));
-    final result = _adminRepository.fetchSections();
+    final result = _userRepository.fetchSections();
     emit(state.copyWith(status: SectionStatus.success));
     return result;
   }
@@ -74,7 +88,7 @@ class SectionCubit extends Cubit<SectionState> {
   Future<void> deleteSection(String id, BuildContext context) async {
     emit(state.copyWith(status: SectionStatus.loading));
     try {
-      _adminRepository.deleteSection(id: id);
+      _userRepository.deleteSection(id: id);
       emit(state.copyWith(status: SectionStatus.success));
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Section deleted successfully'),
@@ -87,10 +101,16 @@ class SectionCubit extends Cubit<SectionState> {
   Future<void> uploadImage() async {
     emit(state.copyWith(status: SectionStatus.loading));
     try {
-      _adminRepository.uploadImage(
-        id: state.sectionName,
-        name: state.sectionName,
-      );
+      await _userRepository
+          .uploadImage(
+        id: "${state.sectionName}_${state.category.id}",
+        name: "${state.category.id}_${state.sectionName}",
+      )
+          .then((value) {
+        imageUrlChanged(imageUrl: value);
+        print("This is url $value");
+        emit(state.copyWith(status: SectionStatus.success));
+      });
     } catch (e) {
       emit(state.copyWith(status: SectionStatus.success));
     }

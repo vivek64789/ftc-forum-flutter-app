@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ftc_forum/cubits/admin/category/category_cubit.dart';
-import 'package:ftc_forum/cubits/admin/section/section_cubit.dart';
+import 'package:ftc_forum/cubits/admin/category/admin_category_cubit.dart';
+import 'package:ftc_forum/cubits/admin/section/admin_section_cubit.dart';
 import 'package:ftc_forum/models/question_category.dart';
 import 'package:ftc_forum/models/section.dart';
 import 'package:ftc_forum/repositories/admin_repository.dart';
@@ -46,12 +46,12 @@ class AdminSectionScreen extends StatelessWidget {
         title: const Text('Admin Sections'),
         centerTitle: true,
       ),
-      body: BlocListener<SectionCubit, SectionState>(
+      body: BlocListener<AdminSectionCubit, AdminSectionState>(
         listener: (context, state) {
           // TODO: implement listener
         },
         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: context.read<SectionCubit>().fetchSections(),
+          stream: context.read<AdminSectionCubit>().fetchSections(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(
@@ -88,7 +88,7 @@ class AdminSectionScreen extends StatelessWidget {
                                 builder: (context) {
                                   return BlocProvider(
                                     create: (context) =>
-                                        SectionCubit(AdminRepository()),
+                                        AdminSectionCubit(AdminRepository()),
                                     child: AddNewCategoryScreen(
                                       initialCategory: QuestionCategory(
                                         id: snapshot.data!.docs[index].id,
@@ -103,13 +103,16 @@ class AdminSectionScreen extends StatelessWidget {
                           },
                           icon: const Icon(Icons.edit),
                         ),
-                        context.read<SectionCubit>().state.status ==
+                        context.read<AdminSectionCubit>().state.status ==
                                 SectionStatus.loading
                             ? const CircularProgressIndicator()
                             : IconButton(
                                 onPressed: () {
-                                  context.read<SectionCubit>().deleteSection(
-                                      snapshot.data!.docs[index].id, context);
+                                  context
+                                      .read<AdminSectionCubit>()
+                                      .deleteSection(
+                                          snapshot.data!.docs[index].id,
+                                          context);
                                 },
                                 icon:
                                     const Icon(Icons.delete, color: Colors.red),
@@ -133,12 +136,12 @@ class AdminSectionScreen extends StatelessWidget {
                 return MultiBlocProvider(
                   providers: [
                     BlocProvider(
-                      create: (_) => SectionCubit(
+                      create: (_) => AdminSectionCubit(
                         AdminRepository(),
                       ),
                     ),
                     BlocProvider(
-                      create: (_) => CategoryCubit(
+                      create: (_) => AdminCategoryCubit(
                         AdminRepository(),
                       ),
                     ),

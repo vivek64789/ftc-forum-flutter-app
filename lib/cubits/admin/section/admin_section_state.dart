@@ -1,4 +1,4 @@
-part of 'section_cubit.dart';
+part of 'admin_section_cubit.dart';
 
 enum SectionStatus {
   initial,
@@ -7,24 +7,24 @@ enum SectionStatus {
   error,
 }
 
-class SectionState extends Equatable {
+class AdminSectionState extends Equatable {
   String sectionName;
   QuestionCategory category;
   String imageUrl;
 
   SectionStatus status;
 
-  SectionState(
+  AdminSectionState(
       {required this.sectionName,
       required this.status,
       required this.category,
       required this.imageUrl});
 
   @override
-  List<Object> get props => [sectionName, status, category];
+  List<Object> get props => [sectionName, status, category, imageUrl];
 
-  factory SectionState.initial() {
-    return SectionState(
+  factory AdminSectionState.initial() {
+    return AdminSectionState(
       sectionName: "",
       status: SectionStatus.initial,
       category: const QuestionCategory(id: "", name: ""),
@@ -32,13 +32,13 @@ class SectionState extends Equatable {
     );
   }
 
-  SectionState copyWith({
+  AdminSectionState copyWith({
     String? sectionName,
     QuestionCategory? category,
     SectionStatus? status,
     String? imageUrl,
   }) {
-    return SectionState(
+    return AdminSectionState(
       sectionName: sectionName ?? this.sectionName,
       category: category ?? this.category,
       status: status ?? this.status,

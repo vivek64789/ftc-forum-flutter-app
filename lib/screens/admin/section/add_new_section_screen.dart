@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ftc_forum/cubits/admin/category/category_cubit.dart';
-import 'package:ftc_forum/cubits/admin/section/section_cubit.dart';
+import 'package:ftc_forum/cubits/admin/category/admin_category_cubit.dart';
+import 'package:ftc_forum/cubits/admin/section/admin_section_cubit.dart';
 import 'package:ftc_forum/models/question_category.dart';
 import 'package:ftc_forum/models/section.dart';
 import 'package:ftc_forum/widgets/rounded_button.dart';
@@ -26,8 +26,8 @@ class _AddNewSectionScreenState extends State<AddNewSectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final sectionCubit = BlocProvider.of<SectionCubit>(context);
-    final categoryCubit = BlocProvider.of<CategoryCubit>(context);
+    final _adminSectionCubit = BlocProvider.of<AdminSectionCubit>(context);
+    final categoryCubit = BlocProvider.of<AdminCategoryCubit>(context);
 
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -37,7 +37,7 @@ class _AddNewSectionScreenState extends State<AddNewSectionScreen> {
             : const Text('Add New Section'),
         centerTitle: true,
       ),
-      body: BlocListener<SectionCubit, SectionState>(
+      body: BlocListener<AdminSectionCubit, AdminSectionState>(
         listener: (context, state) {
           if (state.status == CategoryStatus.initial) ;
         },
@@ -79,7 +79,7 @@ class _AddNewSectionScreenState extends State<AddNewSectionScreen> {
                             setState(() {
                               selectedItem = value;
                             });
-                            sectionCubit.categoryChanged(
+                            _adminSectionCubit.categoryChanged(
                               category: QuestionCategory(
                                 id: value,
                                 name: snapshot.data!.docs
@@ -93,7 +93,7 @@ class _AddNewSectionScreenState extends State<AddNewSectionScreen> {
                 ),
               ),
               SizedBox(height: size.height * 0.02),
-              BlocBuilder<SectionCubit, SectionState>(
+              BlocBuilder<AdminSectionCubit, AdminSectionState>(
                 buildWhen: (previous, current) =>
                     previous.sectionName != current.sectionName,
                 builder: (context, state) {
@@ -101,7 +101,7 @@ class _AddNewSectionScreenState extends State<AddNewSectionScreen> {
                     initialValue: widget.initialSection?.name,
                     hintText: "Enter Section Name",
                     onChanged: (value) {
-                      context.read<SectionCubit>().sectionNameChanged(
+                      context.read<AdminSectionCubit>().sectionNameChanged(
                             sectionName: value,
                           );
                     },
@@ -109,7 +109,18 @@ class _AddNewSectionScreenState extends State<AddNewSectionScreen> {
                   );
                 },
               ),
-              BlocBuilder<SectionCubit, SectionState>(
+              BlocBuilder<AdminSectionCubit, AdminSectionState>(
+                buildWhen: (previous, current) =>
+                    previous.sectionName != current.sectionName,
+                builder: (context, state) {
+                  return IconButton(
+                      onPressed: () {
+                        _adminSectionCubit.uploadImage();
+                      },
+                      icon: const Icon(Icons.upload));
+                },
+              ),
+              BlocBuilder<AdminSectionCubit, AdminSectionState>(
                 buildWhen: (previous, current) =>
                     previous.status != current.status,
                 builder: (context, state) {
@@ -120,15 +131,17 @@ class _AddNewSectionScreenState extends State<AddNewSectionScreen> {
                               widget.initialSection != null ? "Update" : "Save",
                           press: () {
                             widget.initialSection != null
-                                ? context.read<SectionCubit>().updateSection(
-                                    widget.initialSection!.id, context)
+                                ? context
+                                    .read<AdminSectionCubit>()
+                                    .updateSection(
+                                        widget.initialSection!.id, context)
                                 : context
-                                    .read<SectionCubit>()
+                                    .read<AdminSectionCubit>()
                                     .addSection(context);
                           },
                         );
                 },
-              )
+              ),
             ],
           ),
         ),

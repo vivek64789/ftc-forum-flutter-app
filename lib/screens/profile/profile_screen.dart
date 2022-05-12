@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ftc_forum/blocs/app/app_bloc.dart';
-import 'package:ftc_forum/cubits/admin/category/category_cubit.dart';
-import 'package:ftc_forum/cubits/admin/section/section_cubit.dart';
+import 'package:ftc_forum/cubits/admin/category/admin_category_cubit.dart';
+import 'package:ftc_forum/cubits/admin/section/admin_section_cubit.dart';
 import 'package:ftc_forum/cubits/login/login_cubit.dart';
 import 'package:ftc_forum/repositories/admin_repository.dart';
 import 'package:ftc_forum/screens/admin/category/admin_category_screen.dart';
@@ -141,7 +141,7 @@ class AdminSettings extends StatelessWidget {
               MaterialPageRoute(
                 builder: (_) {
                   return BlocProvider(
-                    create: (_) => CategoryCubit(
+                    create: (_) => AdminCategoryCubit(
                       AdminRepository(),
                     ),
                     child: AdminCategoryScreen(),
@@ -159,7 +159,7 @@ class AdminSettings extends StatelessWidget {
               MaterialPageRoute(
                 builder: (_) {
                   return BlocProvider(
-                    create: (_) => SectionCubit(
+                    create: (_) => AdminSectionCubit(
                       AdminRepository(),
                     ),
                     child: AdminSectionScreen(),
