@@ -10,47 +10,7 @@ class CategoryCubit extends Cubit<CategoryState> {
   UserRepository _userRepository;
   CategoryCubit(this._userRepository) : super(CategoryState.initial());
 
-  void categoryNameChanged(String categoryName) {
-    emit(
-      state.copyWith(
-        categoryName: categoryName,
-        status: CategoryStatus.initial,
-      ),
-    );
-  }
 
-  Future<void> addCategory(context) async {
-    if (state.status == CategoryStatus.loading) return;
-    emit(state.copyWith(status: CategoryStatus.loading));
-    try {
-      await _userRepository.createCategory(categoryName: state.categoryName);
-      emit(state.copyWith(status: CategoryStatus.success));
-      Navigator.of(context).pop();
-      // show snackbar
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Category added successfully'),
-      ));
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> updateCategory(String id, BuildContext context) async {
-    if (state.status == CategoryStatus.loading) return;
-    emit(state.copyWith(status: CategoryStatus.loading));
-    try {
-      await _userRepository.updateCategory(
-          id: id, categoryName: state.categoryName);
-      emit(state.copyWith(status: CategoryStatus.success));
-      Navigator.of(context).pop();
-      // show snackbar
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Category updated successfully'),
-      ));
-    } catch (e) {
-      print(e);
-    }
-  }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> fetchCategories() {
     emit(state.copyWith(status: CategoryStatus.loading));
@@ -59,16 +19,5 @@ class CategoryCubit extends Cubit<CategoryState> {
     return result;
   }
 
-  Future<void> deleteCategory(String id, BuildContext context) async {
-    emit(state.copyWith(status: CategoryStatus.loading));
-    try {
-      _userRepository.deleteCategory(id: id);
-      emit(state.copyWith(status: CategoryStatus.success));
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Category deleted successfully'),
-      ));
-    } catch (e) {
-      emit(state.copyWith(status: CategoryStatus.success));
-    }
-  }
+  
 }

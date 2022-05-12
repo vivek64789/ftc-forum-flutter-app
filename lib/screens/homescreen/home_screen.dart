@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ftc_forum/cubits/users/question/question_cubit.dart';
+import 'package:ftc_forum/repositories/user_repository.dart';
 import 'package:ftc_forum/widgets/question_card.dart';
 import 'package:ftc_forum/widgets/replies_thread.dart';
 import 'package:ftc_forum/widgets/reply_card.dart';
@@ -69,8 +72,11 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => WriteQuestion(
-                  size: size,
+                builder: (context) => BlocProvider(
+                  create: (_) => QuestionCubit(UserRepository()),
+                  child: WriteQuestion(
+                    size: size,
+                  ),
                 ),
               ),
             );

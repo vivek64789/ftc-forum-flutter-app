@@ -110,7 +110,7 @@ class AdminRepository {
   Future<String> uploadImage({required String id, required String name}) async {
     File imageFile;
     final picker = ImagePicker();
-
+    
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile == null) {
       return "";
