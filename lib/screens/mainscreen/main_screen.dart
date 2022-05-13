@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ftc_forum/cubits/login/login_cubit.dart';
+import 'package:ftc_forum/cubits/users/category/category_cubit.dart';
 import 'package:ftc_forum/cubits/users/profile/profile_cubit.dart';
 import 'package:ftc_forum/cubits/users/question/question_cubit.dart';
 import 'package:ftc_forum/cubits/users/reply/reply_cubit.dart';
+import 'package:ftc_forum/cubits/users/section/section_cubit.dart';
 import 'package:ftc_forum/repositories/auth_repository.dart';
 import 'package:ftc_forum/repositories/user_repository.dart';
 import 'package:ftc_forum/screens/categories/categories_screen.dart';
@@ -39,6 +41,12 @@ class _MainScreenState extends State<MainScreen> {
         ),
         BlocProvider(
           create: (context) => ReplyCubit(UserRepository()),
+        ),
+        BlocProvider(
+          create: (context) => CategoryCubit(UserRepository()),
+        ),
+        BlocProvider(
+          create: (context) => SectionCubit(UserRepository()),
         ),
       ],
       child: CategoriesScreen(),

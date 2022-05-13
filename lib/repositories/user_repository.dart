@@ -51,6 +51,22 @@ class UserRepository {
     return snapshot;
   }
 
+  Stream<firestore.DocumentSnapshot<Map<String, dynamic>>> fetchSectionById(
+      String id) {
+    final snapshot = _firestore.collection("sections").doc(id).snapshots();
+
+    return snapshot;
+  }
+
+  Stream<firestore.QuerySnapshot<Map<String, dynamic>>>
+      fetchSectionsByCategoriesId(String id) {
+    final snapshot = _firestore
+        .collection("sections")
+        .where('categoryId', isEqualTo: id)
+        .snapshots();
+    return snapshot;
+  }
+
   Stream<firestore.QuerySnapshot<Map<String, dynamic>>> fetchRepliesOfQuestion(
       String id) {
     final snapshot = _firestore

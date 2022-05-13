@@ -4,7 +4,6 @@ import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:ftc_forum/constants.dart';
 import 'package:ftc_forum/cubits/users/reply/reply_cubit.dart';
 import 'package:ftc_forum/models/user_model.dart';
-import 'package:ftc_forum/widgets/avatar_image.dart';
 import 'package:ftc_forum/widgets/vote_button.dart';
 
 class ReplyCard extends StatelessWidget {

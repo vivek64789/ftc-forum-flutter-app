@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ftc_forum/cubits/users/reply/reply_cubit.dart';
 import 'package:ftc_forum/models/reply.dart';
 import 'package:ftc_forum/models/user_model.dart';
-import 'package:ftc_forum/repositories/user_repository.dart';
 import 'package:ftc_forum/widgets/reply_card.dart';
 import 'package:ftc_forum/widgets/write_comment.dart';
 

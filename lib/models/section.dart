@@ -20,8 +20,8 @@ class Section extends Equatable {
     return Section(
       id: id ?? '',
       imageUrl: map['imageUrl'],
-      category: map['category'], 
-      name: map['name'],
+      category: map['categoryId'],
+      name: map['sectionName'],
     );
   }
 }

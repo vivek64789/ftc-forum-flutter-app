@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ftc_forum/cubits/users/question/question_cubit.dart';
+import 'package:ftc_forum/models/section.dart';
 import 'package:ftc_forum/widgets/question_card.dart';
 
 class SectionScreen extends StatefulWidget {
-  SectionScreen({Key? key}) : super(key: key);
-  static Page page() => MaterialPage<void>(child: SectionScreen());
+  final Section section;
+  SectionScreen({Key? key, required this.section}) : super(key: key);
   static const String routeName = '/section';
 
   @override
@@ -18,9 +21,15 @@ class _SectionScreenState extends State<SectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _questionCubit = BlocProvider.of<QuestionCubit>(context);
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Section Screen')),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          widget.section.name.toString(),
+        ),
+      ),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
         child: Center(
