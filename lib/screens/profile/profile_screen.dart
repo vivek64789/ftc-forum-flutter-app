@@ -38,6 +38,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Profile'),
+        actions: [
+          RoundedButton(
+            text: "Logout",
+            press: () {
+              context.read<AppBloc>().add(AppLogoutRequested());
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Container(
@@ -48,95 +56,96 @@ class _ProfileScreenState extends State<ProfileScreen> {
             borderRadius: BorderRadius.circular(size.height * 0.01),
           ),
           child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-              stream: _profileCubit.fetchUserProfile(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                }
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                final user = User.fromJson(snapshot.data!.data());
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            _profileCubit.uploadImage(context);
-                          },
-                          child: BlocBuilder<ProfileCubit, ProfileState>(
-                            builder: (context, state) {
-                              return state.status == ProfileStatus.loading
-                                  ? const CircularProgressIndicator()
-                                  : Container(
-                                      margin: const EdgeInsets.all(8.0),
-                                      child: CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                          user.photo.toString(),
-                                        ),
-                                        radius: size.height * 0.04,
+            stream: _profileCubit.fetchUserProfile(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              }
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              final user = User.fromJson(snapshot.data!.data());
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          _profileCubit.uploadImage(context);
+                        },
+                        child: BlocBuilder<ProfileCubit, ProfileState>(
+                          builder: (context, state) {
+                            return state.status == ProfileStatus.loading
+                                ? const CircularProgressIndicator()
+                                : Container(
+                                    margin: const EdgeInsets.all(8.0),
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        user.photo.toString(),
                                       ),
-                                    );
-                            },
-                          ),
+                                      radius: size.height * 0.04,
+                                    ),
+                                  );
+                          },
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              user.name.toString(),
-                              style: Theme.of(context).textTheme.displaySmall,
-                            ),
-                            Text(
-                              user.email.toString(),
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: size.height * 0.05),
-                    Padding(
-                      padding: EdgeInsets.all(size.width * 0.03),
-                      child: Column(
+                      ),
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ProfileListItem(
-                            caption: "DOB:",
-                            title: user.dob.toString(),
+                          Text(
+                            user.name.toString(),
+                            style: Theme.of(context).textTheme.displaySmall,
                           ),
-                          ProfileListItem(
-                            caption: "Email",
-                            title: user.email.toString(),
-                          ),
-                          ProfileListItem(
-                            caption: "Phone",
-                            title: user.phone.toString(),
+                          Text(
+                            user.email.toString(),
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
                         ],
                       ),
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.05),
+                  Padding(
+                    padding: EdgeInsets.all(size.width * 0.03),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ProfileListItem(
+                          caption: "DOB:",
+                          title: user.dob.toString(),
+                        ),
+                        ProfileListItem(
+                          caption: "Email",
+                          title: user.email.toString(),
+                        ),
+                        ProfileListItem(
+                          caption: "Phone",
+                          title: user.phone.toString(),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: size.height * 0.01),
-                    // divider
-                    user.role.toString() == 'admin'
-                        ? AdminSettings(size: size)
-                        : Container(),
+                  ),
+                  SizedBox(height: size.height * 0.01),
+                  // divider
+                  user.role.toString() == 'admin'
+                      ? AdminSettings(size: size)
+                      : Container(),
 
-                    RoundedButton(
-                      text: "Logout",
-                      press: () {
-                        context.read<AppBloc>().add(AppLogoutRequested());
-                      },
-                    ),
-                  ],
-                );
-              }),
+                  RoundedButton(
+                    text: "Logout",
+                    press: () {
+                      context.read<AppBloc>().add(AppLogoutRequested());
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

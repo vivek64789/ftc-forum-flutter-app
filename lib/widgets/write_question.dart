@@ -70,27 +70,36 @@ class _WriteQuestionState extends State<WriteQuestion> {
                         );
                       }
 
-                      return DropdownButton<dynamic>(
-                        value: selectedCategoryItem,
-                        isDense: true,
-                        isExpanded: true,
-                        hint: const Text('Choose question category'),
-                        items: snapshot.data!.docs.map((doc) {
-                          return DropdownMenuItem<dynamic>(
-                            value: doc.id,
-                            child: Text(doc.data()['categoryName']),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(
-                            () {
-                              selectedCategoryItem = value;
-                              context
-                                  .read<QuestionCubit>()
-                                  .selectedCategoryIdChanged(value);
-                            },
-                          );
-                        },
+                      return Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.circular(widget.size.height * 0.01),
+                        ),
+                        child: DropdownButton<dynamic>(
+                          value: selectedCategoryItem,
+                          isDense: true,
+                          isExpanded: true,
+                          hint: const Text('Choose question category'),
+                          items: snapshot.data!.docs.map((doc) {
+                            return DropdownMenuItem<dynamic>(
+                              value: doc.id,
+                              child: Text(doc.data()['categoryName']),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(
+                              () {
+                                selectedCategoryItem = value;
+                                selectedSectionItem = null;
+                                context
+                                    .read<QuestionCubit>()
+                                    .selectedCategoryIdChanged(value);
+                              },
+                            );
+                          },
+                        ),
                       );
                     },
                   ),
@@ -100,6 +109,12 @@ class _WriteQuestionState extends State<WriteQuestion> {
                         QuestionStatus.success
                     ? DropdownButtonHideUnderline(
                         child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(
+                                widget.size.height * 0.01),
+                          ),
                           margin:
                               EdgeInsets.only(top: widget.size.height * 0.02),
                           child: StreamBuilder<
@@ -120,8 +135,8 @@ class _WriteQuestionState extends State<WriteQuestion> {
                               }
                               return BlocBuilder<QuestionCubit, QuestionState>(
                                 buildWhen: (previous, current) =>
-                                    previous.selectedCategoryId !=
-                                    current.selectedCategoryId,
+                                    previous.selectedSectionId !=
+                                    current.selectedSectionId,
                                 builder: (context, state) {
                                   return DropdownButton<dynamic>(
                                     key: Key(state.selectedSectionId),
@@ -157,11 +172,20 @@ class _WriteQuestionState extends State<WriteQuestion> {
                   buildWhen: (previous, current) =>
                       previous.title != current.title,
                   builder: (context, state) {
-                    return TextFormField(
-                      onChanged: ((value) =>
-                          context.read<QuestionCubit>().titleChanged(value)),
-                      decoration: const InputDecoration(
-                        labelText: "Question Title",
+                    return Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                            BorderRadius.circular(widget.size.height * 0.01),
+                      ),
+                      child: TextFormField(
+                        onChanged: ((value) =>
+                            context.read<QuestionCubit>().titleChanged(value)),
+                        decoration: const InputDecoration(
+                          labelText: "Question Title",
+                        ),
                       ),
                     );
                   },
@@ -222,7 +246,9 @@ class _WriteQuestionState extends State<WriteQuestion> {
                               context
                                   .read<QuestionCubit>()
                                   .descriptionChanged(json);
-                              context.read<QuestionCubit>().postQuestion(context);
+                              context
+                                  .read<QuestionCubit>()
+                                  .postQuestion(context);
                             },
                           );
                   },
