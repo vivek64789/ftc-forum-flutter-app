@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ftc_forum/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:ftc_forum/models/question.dart';
+import 'package:ftc_forum/models/question_category.dart';
 import 'package:ftc_forum/models/reply.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -46,6 +47,23 @@ class UserRepository {
     final snapshot = _firestore
         .collection("sections")
         .where('categoryId', isEqualTo: id)
+        .snapshots();
+
+    return snapshot;
+  }
+
+  Future<firestore.DocumentSnapshot<Map<String, dynamic>>> fetchCategoryById(
+      String id) async {
+    final snapshot = _firestore.collection("categories").doc(id);
+    final result = await snapshot.get();
+    return result;
+  }
+
+  Stream<firestore.QuerySnapshot<Map<String, dynamic>>>
+      fetchQuestionsBySectionId(String id) {
+    final snapshot = _firestore
+        .collection("questions")
+        .where('section', isEqualTo: id)
         .snapshots();
 
     return snapshot;

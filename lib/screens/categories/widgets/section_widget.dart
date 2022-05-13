@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ftc_forum/cubits/users/question/question_cubit.dart';
 import 'package:ftc_forum/cubits/users/section/section_cubit.dart';
 import 'package:ftc_forum/models/question_category.dart';
 import 'package:ftc_forum/models/section.dart';
+import 'package:ftc_forum/repositories/user_repository.dart';
 import 'package:ftc_forum/screens/categories/widgets/section_item_widget.dart';
 import 'package:ftc_forum/screens/sections/section_screen.dart';
 
@@ -72,8 +74,12 @@ class SectionWidget extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SectionScreen(
-                                  section: section,
+                                builder: (context) => BlocProvider(
+                                  create: (context) =>
+                                      QuestionCubit(UserRepository()),
+                                  child: SectionScreen(
+                                    section: section,
+                                  ),
                                 ),
                               ),
                             );

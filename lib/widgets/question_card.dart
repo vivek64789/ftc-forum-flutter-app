@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:ftc_forum/cubits/users/question/question_cubit.dart';
 import 'package:ftc_forum/cubits/users/reply/reply_cubit.dart';
+import 'package:ftc_forum/models/question_category.dart';
 import 'package:ftc_forum/repositories/user_repository.dart';
 import 'package:ftc_forum/widgets/avatar_image.dart';
 import 'package:ftc_forum/widgets/replies_thread.dart';
@@ -201,10 +203,6 @@ class _QuestionCardState extends State<QuestionCard> {
                       ),
                     ],
                   ),
-                  Text(
-                    "Web Development",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  )
                 ],
               ),
               // Only show when comment is active

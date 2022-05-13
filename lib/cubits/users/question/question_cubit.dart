@@ -129,9 +129,25 @@ class QuestionCubit extends Cubit<QuestionState> {
     return result;
   }
 
+  Future<DocumentSnapshot<Map<String, dynamic>>> fetchCategoryById(
+      String categoryId) async {
+    emit(state.copyWith(status: QuestionStatus.loading));
+    final result =await  _userRepository.fetchCategoryById(categoryId);
+    emit(state.copyWith(status: QuestionStatus.success));
+    return result;
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> fetchQuestions() {
     emit(state.copyWith(status: QuestionStatus.loading));
     final result = _userRepository.fetchQuestions();
+    emit(state.copyWith(status: QuestionStatus.success));
+    return result;
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> fetchQuestionsBySectionId(
+      String sectionId) {
+    emit(state.copyWith(status: QuestionStatus.loading));
+    final result = _userRepository.fetchQuestionsBySectionId(sectionId);
     emit(state.copyWith(status: QuestionStatus.success));
     return result;
   }
