@@ -24,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isDownvoteActive = false;
   int currentNavigationIndex = 0;
 
- 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -96,7 +95,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 downvotes: question.downVotes.toString(),
                                 comments: question.replyCount.toString(),
                                 onPress: () {},
-                                
                                 imageUrl: question.imageUrl.toString(),
                               );
                             },

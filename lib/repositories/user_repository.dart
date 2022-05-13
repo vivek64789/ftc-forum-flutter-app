@@ -17,6 +17,13 @@ class UserRepository {
 
   var currentUser = User.empty;
 
+  Stream<firestore.DocumentSnapshot<Map<String, dynamic>>> fetchUserProfile(
+      String uid) {
+    final snapshot = _firestore.collection("users").doc(uid).snapshots();
+
+    return snapshot;
+  }
+
   Stream<firestore.QuerySnapshot<Map<String, dynamic>>> fetchCategories() {
     final snapshot = _firestore.collection("categories").snapshots();
     return snapshot;
@@ -268,6 +275,17 @@ class UserRepository {
         .putFile(imageFile);
 
     return uploadTask.ref.getDownloadURL().then((value) => value);
+  }
+
+  Future<void> updateProfileImageUrl({
+    required String uid,
+    required String imageUrl,
+  }) async {
+    try {
+      await _firestore.collection("users").doc(uid).update({
+        'photo': imageUrl,
+      });
+    } catch (e) {}
   }
 
   String getRandString(int len) {

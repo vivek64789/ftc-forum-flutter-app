@@ -82,7 +82,7 @@ class _AddNewSectionScreenState extends State<AddNewSectionScreen> {
                             _adminSectionCubit.categoryChanged(
                               category: QuestionCategory(
                                 id: value,
-                                name: snapshot.data!.docs
+                                categoryName: snapshot.data!.docs
                                     .firstWhere((doc) => doc.id == value)
                                     .data()['categoryName'],
                               ),

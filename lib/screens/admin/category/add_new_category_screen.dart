@@ -34,7 +34,7 @@ class AddNewCategoryScreen extends StatelessWidget {
                     previous.categoryName != current.categoryName,
                 builder: (context, state) {
                   return RoundedInputField(
-                    initialValue: initialCategory?.name,
+                    initialValue: initialCategory?.categoryName,
                     hintText: "Enter Category Name",
                     onChanged: (value) {
                       context

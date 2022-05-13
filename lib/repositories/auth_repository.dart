@@ -29,13 +29,16 @@ class AuthRepository {
     required String phone,
     required String dob,
   }) async {
-    print("name: $name, Phone: $phone, DOB: $dob");
     try {
       await _firebaseAuth!
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) {
         updateUserData(
-            name: name, phone: phone, dob: dob, uid: value.user!.uid);
+            name: name,
+            phone: phone,
+            dob: dob,
+            uid: value.user!.uid,
+            email: email);
       });
     } catch (e) {
       print(e.toString());
@@ -47,6 +50,7 @@ class AuthRepository {
     required String name,
     required String phone,
     required String dob,
+    required String email,
     String role = "user",
   }) async {
     await _firestore.collection("users").doc(uid).set({
@@ -55,6 +59,9 @@ class AuthRepository {
       "phone": phone,
       "dob": dob,
       "role": role,
+      "email": email,
+      'photo':
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1024px-Circle-icons-profile.svg.png"
     });
   }
 

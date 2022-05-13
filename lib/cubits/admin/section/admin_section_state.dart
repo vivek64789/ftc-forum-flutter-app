@@ -27,7 +27,7 @@ class AdminSectionState extends Equatable {
     return AdminSectionState(
       sectionName: "",
       status: SectionStatus.initial,
-      category: const QuestionCategory(id: "", name: ""),
+      category: const QuestionCategory(id: "", categoryName: ""),
       imageUrl: "",
     );
   }

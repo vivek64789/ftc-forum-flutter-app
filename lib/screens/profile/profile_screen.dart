@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ftc_forum/blocs/app/app_bloc.dart';
 import 'package:ftc_forum/cubits/admin/category/admin_category_cubit.dart';
 import 'package:ftc_forum/cubits/admin/section/admin_section_cubit.dart';
 import 'package:ftc_forum/cubits/login/login_cubit.dart';
+import 'package:ftc_forum/cubits/users/profile/profile_cubit.dart';
+import 'package:ftc_forum/models/user_model.dart';
 import 'package:ftc_forum/repositories/admin_repository.dart';
 import 'package:ftc_forum/screens/admin/category/admin_category_screen.dart';
 import 'package:ftc_forum/screens/admin/section/admin_section_screen.dart';
@@ -27,6 +30,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     context.read<LoginCubit>().fetchRole(context.read<AppBloc>().state.user.id);
+    final _appBloc = BlocProvider.of<AppBloc>(context);
+    final _profileCubit = BlocProvider.of<ProfileCubit>(context);
+    _profileCubit.uidChanged(_appBloc.state.user.id);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -41,75 +47,96 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(size.height * 0.01),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: AvatarImage(
-                      height: size.height * 0.10,
-                      profileUrl:
-                          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1024px-Circle-icons-profile.svg.png',
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Bibekanand Kushwaha",
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
-                      Text(
-                        "vivek@gmail.com",
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: size.height * 0.05),
-              Padding(
-                padding: EdgeInsets.all(size.width * 0.03),
-                child: Column(
+          child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              stream: _profileCubit.fetchUserProfile(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                }
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                final user = User.fromJson(snapshot.data!.data());
+                return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ProfileListItem(
-                      caption: "DOB:",
-                      title: "2022-02-22",
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _profileCubit.uploadImage(context);
+                          },
+                          child: BlocBuilder<ProfileCubit, ProfileState>(
+                            builder: (context, state) {
+                              return state.status == ProfileStatus.loading
+                                  ? const CircularProgressIndicator()
+                                  : Container(
+                                      margin: const EdgeInsets.all(8.0),
+                                      child: CircleAvatar(
+                                        backgroundImage: NetworkImage(
+                                          user.photo.toString(),
+                                        ),
+                                        radius: size.height * 0.04,
+                                      ),
+                                    );
+                            },
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              user.name.toString(),
+                              style: Theme.of(context).textTheme.displaySmall,
+                            ),
+                            Text(
+                              user.email.toString(),
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    ProfileListItem(
-                      caption: "Email",
-                      title: "vivek@gmail.com",
+                    SizedBox(height: size.height * 0.05),
+                    Padding(
+                      padding: EdgeInsets.all(size.width * 0.03),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ProfileListItem(
+                            caption: "DOB:",
+                            title: user.dob.toString(),
+                          ),
+                          ProfileListItem(
+                            caption: "Email",
+                            title: user.email.toString(),
+                          ),
+                          ProfileListItem(
+                            caption: "Phone",
+                            title: user.phone.toString(),
+                          ),
+                        ],
+                      ),
                     ),
-                    ProfileListItem(
-                      caption: "Phone",
-                      title: "9818821313",
+                    SizedBox(height: size.height * 0.01),
+                    // divider
+                    user.role.toString() == 'admin'
+                        ? AdminSettings(size: size)
+                        : Container(),
+
+                    RoundedButton(
+                      text: "Logout",
+                      press: () {
+                        context.read<AppBloc>().add(AppLogoutRequested());
+                      },
                     ),
                   ],
-                ),
-              ),
-              SizedBox(height: size.height * 0.01),
-              // divider
-              context.read<LoginCubit>().state.isAdmin
-                  ? AdminSettings(size: size)
-                  : Container(),
-
-              RoundedButton(
-                text: "Manage Settings",
-                press: () {
-                  setState(() {});
-                },
-              ),
-              RoundedButton(
-                text: "Logout",
-                press: () {
-                  context.read<AppBloc>().add(AppLogoutRequested());
-                },
-              ),
-            ],
-          ),
+                );
+              }),
         ),
       ),
     );

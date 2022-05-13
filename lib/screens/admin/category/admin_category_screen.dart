@@ -9,19 +9,6 @@ import 'package:ftc_forum/screens/admin/category/add_new_category_screen.dart';
 class AdminCategoryScreen extends StatelessWidget {
   AdminCategoryScreen({Key? key}) : super(key: key);
 
-  List<QuestionCategory> dummyCategories = [
-    const QuestionCategory(id: "1", name: "Category 1"),
-    const QuestionCategory(id: "2", name: "Category 2"),
-    const QuestionCategory(id: "3", name: "Category 3"),
-    const QuestionCategory(id: "4", name: "Category 4"),
-    const QuestionCategory(id: "5", name: "Category 5"),
-    const QuestionCategory(id: "6", name: "Category 6"),
-    const QuestionCategory(id: "7", name: "Category 7"),
-    const QuestionCategory(id: "8", name: "Category 8"),
-    const QuestionCategory(id: "9", name: "Category 9"),
-    const QuestionCategory(id: "10", name: "Category 10"),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +62,7 @@ class AdminCategoryScreen extends StatelessWidget {
                                     child: AddNewCategoryScreen(
                                       initialCategory: QuestionCategory(
                                         id: snapshot.data!.docs[index].id,
-                                        name: snapshot.data!.docs[index]
+                                        categoryName: snapshot.data!.docs[index]
                                             .data()["categoryName"],
                                       ),
                                     ),

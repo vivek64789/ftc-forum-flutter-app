@@ -80,16 +80,15 @@ class RepliesThread extends StatelessWidget {
                                   return ReplyCard(
                                     id: reply.id,
                                     uid: reply.uid,
-                                    upvotedBy: reply.upVotedBy ,
-                                    downvotedBy:
-                                        reply.downVotedBy,
+                                    upvotedBy: reply.upVotedBy,
+                                    downvotedBy: reply.downVotedBy,
                                     user: user,
                                     reply: reply.description,
                                     date: reply.date as DateTime,
                                     name: userSnapshot.data!.name.toString(),
                                     onPress: () {},
                                     profileUrl:
-                                        "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1024px-Circle-icons-profile.svg.png",
+                                        userSnapshot.data!.photo.toString(),
                                     bgColor: Theme.of(context)
                                         .scaffoldBackgroundColor,
                                     upvotes: reply.upVotes.toString(),

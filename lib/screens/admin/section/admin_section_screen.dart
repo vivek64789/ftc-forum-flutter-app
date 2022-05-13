@@ -12,33 +12,6 @@ import 'package:ftc_forum/screens/admin/section/add_new_section_screen.dart';
 class AdminSectionScreen extends StatelessWidget {
   AdminSectionScreen({Key? key}) : super(key: key);
 
-  List<Section> dummyCategories = [
-    const Section(
-      id: "1",
-      name: "Category 1",
-      category: QuestionCategory(id: "id1", name: "Category 1"),
-      imageUrl: "",
-    ),
-    const Section(
-      id: "2",
-      name: "Category 2",
-      category: QuestionCategory(id: "id1", name: "Category 1"),
-      imageUrl: "",
-    ),
-    const Section(
-      id: "3",
-      name: "Category 3",
-      category: QuestionCategory(id: "id1", name: "Category 1"),
-      imageUrl: "",
-    ),
-    const Section(
-      id: "4",
-      name: "Category 4",
-      category: QuestionCategory(id: "id1", name: "Category 1"),
-      imageUrl: "",
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,11 +62,17 @@ class AdminSectionScreen extends StatelessWidget {
                                   return BlocProvider(
                                     create: (context) =>
                                         AdminSectionCubit(AdminRepository()),
-                                    child: AddNewCategoryScreen(
-                                      initialCategory: QuestionCategory(
-                                        id: snapshot.data!.docs[index].id,
-                                        name: snapshot.data!.docs[index]
-                                            .data()["sectionName"],
+                                    child: BlocProvider(
+                                      create: (_) =>
+                                          AdminCategoryCubit(AdminRepository()),
+                                      child: AddNewSectionScreen(
+                                        initialSection: Section(
+                                          id: snapshot.data!.docs[index].id,
+                                          name: snapshot.data!.docs[index]
+                                              .data()["sectionName"],
+                                          category: snapshot.data!.docs[index]
+                                              .data()["categoryId"],
+                                        ),
                                       ),
                                     ),
                                   );

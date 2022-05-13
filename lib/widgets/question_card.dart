@@ -4,6 +4,7 @@ import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:ftc_forum/cubits/users/question/question_cubit.dart';
 import 'package:ftc_forum/cubits/users/reply/reply_cubit.dart';
 import 'package:ftc_forum/repositories/user_repository.dart';
+import 'package:ftc_forum/widgets/avatar_image.dart';
 import 'package:ftc_forum/widgets/replies_thread.dart';
 import 'package:ftc_forum/widgets/vote_button.dart';
 
@@ -90,9 +91,8 @@ class _QuestionCardState extends State<QuestionCard> {
                 children: [
                   SizedBox(
                     height: size.height * 0.05,
-                    child: ClipOval(
-                      child: Image.network(
-                          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1024px-Circle-icons-profile.svg.png'),
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(widget.profileUrl),
                     ),
                   ),
                   SizedBox(width: size.width * 0.03),

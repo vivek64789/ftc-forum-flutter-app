@@ -75,8 +75,12 @@ class ReplyCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AvatarImage(
-                      height: size.height * 0.05, profileUrl: profileUrl),
+                  SizedBox(
+                    height: size.height * 0.05,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(profileUrl),
+                    ),
+                  ),
                   SizedBox(width: size.width * 0.03),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
