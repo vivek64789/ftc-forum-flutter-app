@@ -10,7 +10,6 @@ import 'package:ftc_forum/models/user_model.dart';
 import 'package:ftc_forum/repositories/admin_repository.dart';
 import 'package:ftc_forum/screens/admin/category/admin_category_screen.dart';
 import 'package:ftc_forum/screens/admin/section/admin_section_screen.dart';
-import 'package:ftc_forum/widgets/avatar_image.dart';
 import 'package:ftc_forum/widgets/rounded_button.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -38,14 +37,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Profile'),
-        actions: [
-          RoundedButton(
-            text: "Logout",
-            press: () {
-              context.read<AppBloc>().add(AppLogoutRequested());
-            },
-          ),
-        ],
       ),
       body: Center(
         child: Container(
@@ -139,6 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   RoundedButton(
                     text: "Logout",
                     press: () {
+                      Navigator.of(context).popUntil((route) => false);
                       context.read<AppBloc>().add(AppLogoutRequested());
                     },
                   ),

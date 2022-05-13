@@ -18,8 +18,18 @@ class Body extends StatelessWidget {
       child: SingleChildScrollView(
         child: BlocListener<RegisterCubit, RegisterState>(
           listener: (context, state) {
-            if (state.status == RegisterStatus.success) {
-              print("Register Success");
+            if (state.status == RegisterStatus.success &&
+                state.email.isEmpty &&
+                state.password.isEmpty &&
+                state.name.isEmpty &&
+                state.phone.isEmpty &&
+                state.dob.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("All fields are required"),
+                ),
+              );
+            } else if (state.status == RegisterStatus.success) {
               Navigator.pop(context);
               Navigator.push(
                 context,
@@ -35,7 +45,11 @@ class Body extends StatelessWidget {
             } else if (state.status == RegisterStatus.loading) {
               print("Register Loading");
             } else if (state.status == RegisterStatus.error) {
-              print("Register Error");
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("There is some error"),
+                ),
+              );
             } else {
               print("Register Else");
             }
