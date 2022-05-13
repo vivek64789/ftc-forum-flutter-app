@@ -39,16 +39,18 @@ class ReplyCard extends StatelessWidget {
     this.textColor = Colors.white,
   }) : super(key: key);
 
-  bool isUpvoted(List<String>? upvotedBy) {
-    return upvotedBy!.contains(uid);
+  bool isUpvoted(List<String>? upvotedBy, String currentUserId) {
+    return upvotedBy!.contains(currentUserId);
   }
 
-  bool isDownvoted(List<String>? downvotedBy) {
-    return downvotedBy!.contains(uid);
+  bool isDownvoted(List<String>? downvotedBy, String currentUserId) {
+    return downvotedBy!.contains(currentUserId);
   }
 
   @override
   Widget build(BuildContext context) {
+    final _replyCubit = BlocProvider.of<ReplyCubit>(context);
+
     final quill.QuillController _quillController = quill.QuillController(
         document: quill.Document.fromJson(reply as List<dynamic>),
         selection: const TextSelection.collapsed(offset: 0));
@@ -119,9 +121,9 @@ class ReplyCard extends StatelessWidget {
                     children: [
                       VoteButton(
                         icon: Icons.thumb_up,
-                        isSelected: isUpvoted(upvotedBy),
+                        isSelected: isUpvoted(upvotedBy, _replyCubit.state.uid),
                         onPress: () {
-                          isUpvoted(upvotedBy)
+                          isUpvoted(upvotedBy, _replyCubit.state.uid)
                               ? context.read<ReplyCubit>().decreaseUpvoteReply(
                                   replyId: id,
                                   updatedVote: int.parse(upvotes) - 1)
@@ -136,9 +138,13 @@ class ReplyCard extends StatelessWidget {
                       ),
                       VoteButton(
                         icon: Icons.thumb_down,
-                        isSelected: isDownvoted(downvotedBy),
+                        isSelected:
+                            isDownvoted(downvotedBy, _replyCubit.state.uid),
                         onPress: () {
-                          isDownvoted(downvotedBy)
+                          isDownvoted(
+                            downvotedBy,
+                            _replyCubit.state.uid,
+                          )
                               ? context
                                   .read<ReplyCubit>()
                                   .decreaseDownvoteReply(

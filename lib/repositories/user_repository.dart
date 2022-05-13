@@ -102,24 +102,29 @@ class UserRepository {
   }
 
   Future<void> upvoteQuestion(
-      {required String questionId, required int updatedVote}) async {
-    print(questionId);
-    print(updatedVote);
+      {required String questionId,
+      required int updatedVote,
+      required String uid}) async {
     try {
       await _firestore.collection("questions").doc(questionId).update({
         'upvotes': updatedVote,
       });
-      await _firestore.collection("questions").doc(questionId).set({
-        'upvotes': updatedVote,
-      }, firestore.SetOptions(merge: true));
+      await _firestore.collection("questions").doc(questionId).update({
+        'upVotedBy': firestore.FieldValue.arrayUnion([uid]),
+      });
     } catch (e) {}
   }
 
   Future<void> downvoteQuestion(
-      {required String questionId, required int updatedVote}) async {
+      {required String questionId,
+      required int updatedVote,
+      required String uid}) async {
     try {
       await _firestore.collection("questions").doc(questionId).update({
         'downvotes': updatedVote,
+      });
+      await _firestore.collection("questions").doc(questionId).update({
+        'downVotedBy': firestore.FieldValue.arrayUnion([uid]),
       });
     } catch (e) {}
   }
@@ -157,6 +162,24 @@ class UserRepository {
     } catch (e) {}
   }
 
+  Future<void> decreaseUpvoteQuestion(
+      {required String questionId,
+      required int updatedVote,
+      required String uid}) async {
+    try {
+      // decreasing upvotes
+      await _firestore.collection("questions").doc(questionId).update({
+        'upvotes': updatedVote,
+      });
+
+      // removing uid from upVotedBy
+
+      await _firestore.collection("questions").doc(questionId).update({
+        'upVotedBy': firestore.FieldValue.arrayRemove([uid]),
+      });
+    } catch (e) {}
+  }
+
   Future<void> downvoteReply(
       {required String replyId,
       required int updatedVote,
@@ -180,6 +203,20 @@ class UserRepository {
         'downvotes': updatedVote,
       });
       await _firestore.collection("replies").doc(replyId).update({
+        'downVotedBy': firestore.FieldValue.arrayRemove([uid]),
+      });
+    } catch (e) {}
+  }
+
+  Future<void> decreaseDownvoteQuestion(
+      {required String questionId,
+      required int updatedVote,
+      required String uid}) async {
+    try {
+      await _firestore.collection("questions").doc(questionId).update({
+        'downvotes': updatedVote,
+      });
+      await _firestore.collection("questions").doc(questionId).update({
         'downVotedBy': firestore.FieldValue.arrayRemove([uid]),
       });
     } catch (e) {}

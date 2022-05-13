@@ -24,11 +24,13 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isDownvoteActive = false;
   int currentNavigationIndex = 0;
 
+ 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final _appBloc = BlocProvider.of<AppBloc>(context);
     final _questionCubit = BlocProvider.of<QuestionCubit>(context);
+    _questionCubit.uidChanged(_appBloc.state.user.id);
 
     return Scaffold(
       appBar: AppBar(centerTitle: true, title: const Text('FTC Forum Feed')),
@@ -59,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       // print(doc.data());
 
                       final question = Question.fromMap(doc.data(), doc.id);
-                      
+
                       // print(question);
                       final user = _questionCubit.fetchUserById(question.uid);
                       return FutureBuilder<User>(
@@ -81,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             builder: (context, state) {
                               return QuestionCard(
                                 qid: question.id,
+                                uid: question.uid,
                                 profileUrl: userSnapshot.data!.photo.toString(),
                                 name: userSnapshot.data!.name.toString(),
                                 date: question.date as DateTime,
@@ -88,25 +91,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 description:
                                     question.description as List<dynamic>,
                                 upvotes: question.upVotes.toString(),
+                                upVotedBy: question.upVotedBy,
+                                downVotedBy: question.downVotedBy,
                                 downvotes: question.downVotes.toString(),
                                 comments: question.replyCount.toString(),
                                 onPress: () {},
-                                onUpvote: () {
-                                  _questionCubit.upvoteQuestion(
-                                    questionId: question.id,
-                                    updatedVote:
-                                        int.parse(question.upVotes.toString()) +
-                                            1,
-                                  );
-                                },
-                                onDownvote: () {
-                                  _questionCubit.downvoteQuestion(
-                                    questionId: question.id,
-                                    updatedVote: int.parse(
-                                            question.downVotes.toString()) -
-                                        1,
-                                  );
-                                },
+                                
                                 imageUrl: question.imageUrl.toString(),
                               );
                             },

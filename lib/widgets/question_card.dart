@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:ftc_forum/cubits/users/question/question_cubit.dart';
 import 'package:ftc_forum/cubits/users/reply/reply_cubit.dart';
 import 'package:ftc_forum/repositories/user_repository.dart';
 import 'package:ftc_forum/widgets/replies_thread.dart';
@@ -8,6 +9,9 @@ import 'package:ftc_forum/widgets/vote_button.dart';
 
 class QuestionCard extends StatefulWidget {
   final String qid;
+  final String uid;
+  final List<String>? upVotedBy;
+  final List<String>? downVotedBy;
   final String profileUrl;
   final String imageUrl;
   final String name;
@@ -15,9 +19,7 @@ class QuestionCard extends StatefulWidget {
   final String title;
   final List<dynamic> description;
   final String upvotes;
-  final Function onUpvote;
   final String downvotes;
-  final Function onDownvote;
   final String comments;
   final String category;
   final Function onPress;
@@ -25,6 +27,9 @@ class QuestionCard extends StatefulWidget {
   QuestionCard({
     Key? key,
     required this.name,
+    required this.uid,
+    required this.downVotedBy,
+    required this.upVotedBy,
     required this.qid,
     required this.imageUrl,
     required this.profileUrl,
@@ -35,8 +40,6 @@ class QuestionCard extends StatefulWidget {
     this.downvotes = "0",
     this.comments = "0",
     required this.onPress,
-    required this.onDownvote,
-    required this.onUpvote,
     this.category = "General",
     this.bgColor = Colors.white,
     this.textColor = Colors.white,
@@ -48,8 +51,19 @@ class QuestionCard extends StatefulWidget {
 
 class _QuestionCardState extends State<QuestionCard> {
   bool isCommentActive = false;
+
+  bool isUpvoted(List<String>? upvotedBy, String currentUserId) {
+    return upvotedBy!.contains(currentUserId);
+  }
+
+  bool isDownvoted(List<String>? downvotedBy, String currentUserId) {
+    return downvotedBy!.contains(currentUserId);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final _questionCubit = BlocProvider.of<QuestionCubit>(context);
+
     final quill.QuillController _quillController = quill.QuillController(
         document: quill.Document.fromJson(widget.description),
         selection: const TextSelection.collapsed(offset: 0));
@@ -130,8 +144,20 @@ class _QuestionCardState extends State<QuestionCard> {
                     children: [
                       VoteButton(
                         icon: Icons.thumb_up,
-                        isSelected: false,
-                        onPress: () => widget.onUpvote(),
+                        isSelected: isUpvoted(
+                            widget.upVotedBy, _questionCubit.state.uid),
+                        onPress: () {
+                          isUpvoted(widget.upVotedBy, _questionCubit.state.uid)
+                              ? _questionCubit.decreaseUpvoteQuestion(
+                                  questionId: widget.qid,
+                                  updatedVote:
+                                      int.parse(widget.upvotes.toString()) - 1)
+                              : _questionCubit.upvoteQuestion(
+                                  questionId: widget.qid,
+                                  updatedVote:
+                                      int.parse(widget.upvotes.toString()) + 1,
+                                );
+                        },
                       ),
                       Text(
                         widget.upvotes,
@@ -139,8 +165,21 @@ class _QuestionCardState extends State<QuestionCard> {
                       ),
                       VoteButton(
                         icon: Icons.thumb_down,
-                        isSelected: false,
-                        onPress: () => widget.onDownvote(),
+                        isSelected: isDownvoted(
+                            widget.downVotedBy, _questionCubit.state.uid),
+                        onPress: () => {
+                          isDownvoted(
+                                  widget.downVotedBy, _questionCubit.state.uid)
+                              ? _questionCubit.decreaseDownvoteQuestion(
+                                  questionId: widget.qid,
+                                  updatedVote: int.parse(widget.downvotes) + 1)
+                              : _questionCubit.downvoteQuestion(
+                                  questionId: widget.qid,
+                                  updatedVote:
+                                      int.parse(widget.downvotes.toString()) -
+                                          1,
+                                )
+                        },
                       ),
                       Text(
                         widget.downvotes,

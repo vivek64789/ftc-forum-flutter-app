@@ -29,9 +29,10 @@ class _SectionScreenState extends State<SectionScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 QuestionCard(
+                  downVotedBy: [],
+                  upVotedBy: [],
+                  uid: "",
                   qid: '1',
-                  onDownvote: () {},
-                  onUpvote: () {},
                   name: "John Doe",
                   profileUrl: "profileUrl",
                   date: DateTime.now(),
@@ -41,9 +42,10 @@ class _SectionScreenState extends State<SectionScreen> {
                   imageUrl: "",
                 ),
                 QuestionCard(
+                  downVotedBy: [],
+                  upVotedBy: [],
+                  uid: "",
                   qid: '2',
-                  onDownvote: () {},
-                  onUpvote: () {},
                   name: "John Doe",
                   profileUrl: "profileUrl",
                   date: DateTime.now(),
@@ -53,9 +55,10 @@ class _SectionScreenState extends State<SectionScreen> {
                   imageUrl: "",
                 ),
                 QuestionCard(
+                  downVotedBy: [],
+                  upVotedBy: [],
+                  uid: "",
                   qid: '3',
-                  onDownvote: () {},
-                  onUpvote: () {},
                   name: "John Doe",
                   profileUrl: "profileUrl",
                   date: DateTime.now(),

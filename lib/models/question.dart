@@ -72,10 +72,10 @@ class Question extends Equatable {
       date: DateTime.fromMicrosecondsSinceEpoch(map['date'].seconds * 1000000),
       upVotes: map['upvotes'],
       downVotes: map['downvotes'],
-      replyCount: map['replyCount'],
+      replyCount: map['replies'].length,
       imageUrl: map['imageUrl'],
-      // upVotedBy: jsonDecode(map['upVotedBy']),
-      // downVotedBy: jsonDecode(map['downVotedBy']),
+      upVotedBy: map['upVotedBy']?.cast<String>(),
+      downVotedBy: map['downVotedBy']?.cast<String>(),
       replies: map['replies'] as List<dynamic>,
     );
   }

@@ -90,15 +90,35 @@ class QuestionCubit extends Cubit<QuestionState> {
     );
   }
 
-  Future<void> upvoteQuestion({required String questionId,required int updatedVote}) async {
+  Future<void> upvoteQuestion(
+      {required String questionId, required int updatedVote}) async {
     emit(state.copyWith(status: QuestionStatus.loading));
-    await _userRepository.upvoteQuestion(questionId: questionId, updatedVote: updatedVote);
+    await _userRepository.upvoteQuestion(
+        questionId: questionId, updatedVote: updatedVote, uid: state.uid);
     emit(state.copyWith(status: QuestionStatus.success));
   }
 
-  Future<void> downvoteQuestion({required String questionId,required int updatedVote}) async {
+  Future<void> decreaseUpvoteQuestion(
+      {required String questionId, required int updatedVote}) async {
     emit(state.copyWith(status: QuestionStatus.loading));
-    await _userRepository.downvoteQuestion(questionId: questionId, updatedVote: updatedVote);
+    await _userRepository.decreaseUpvoteQuestion(
+        questionId: questionId, updatedVote: updatedVote, uid: state.uid);
+    emit(state.copyWith(status: QuestionStatus.success));
+  }
+
+  Future<void> decreaseDownvoteQuestion(
+      {required String questionId, required int updatedVote}) async {
+    emit(state.copyWith(status: QuestionStatus.loading));
+    await _userRepository.decreaseDownvoteQuestion(
+        questionId: questionId, updatedVote: updatedVote, uid: state.uid);
+    emit(state.copyWith(status: QuestionStatus.success));
+  }
+
+  Future<void> downvoteQuestion(
+      {required String questionId, required int updatedVote}) async {
+    emit(state.copyWith(status: QuestionStatus.loading));
+    await _userRepository.downvoteQuestion(
+        questionId: questionId, updatedVote: updatedVote, uid: state.uid);
     emit(state.copyWith(status: QuestionStatus.success));
   }
 
