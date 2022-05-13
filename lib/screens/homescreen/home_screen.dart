@@ -7,9 +7,7 @@ import 'package:ftc_forum/models/question.dart';
 import 'package:ftc_forum/models/user_model.dart';
 import 'package:ftc_forum/repositories/user_repository.dart';
 import 'package:ftc_forum/widgets/question_card.dart';
-import 'package:ftc_forum/widgets/replies_thread.dart';
-import 'package:ftc_forum/widgets/reply_card.dart';
-import 'package:ftc_forum/widgets/vote_button.dart';
+
 import 'package:ftc_forum/widgets/write_question.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -38,8 +36,10 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Container(
           height: size.height,
-          child: Center(
-            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: size.height * 0.2),
+            child: Center(
+              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: _questionCubit.fetchQuestions(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -53,49 +53,71 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
                   return ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        final doc = snapshot.data!.docs[index];
-                        // print(doc.data());
-                        final question = Question.fromMap(doc.data());
-                        print(question.description);
-                        // print(question);
-                        final user = _questionCubit.fetchUserById(question.uid);
-                        return FutureBuilder<User>(
-                            future: user,
-                            builder: (userContext, userSnapshot) {
-                              if (userSnapshot.hasError) {
-                                return Center(
-                                  child: Text('Error: ${userSnapshot.error}'),
-                                );
-                              }
-                              if (!userSnapshot.hasData) {
-                                return Center(
-                                  child: Container(
-                                      margin: EdgeInsets.all(size.height * 0.1),
-                                      child: const CircularProgressIndicator()),
-                                );
-                              }
-                              return BlocBuilder<QuestionCubit, QuestionState>(
-                                builder: (context, state) {
-                                  return QuestionCard(
-                                    profileUrl:
-                                        userSnapshot.data!.photo.toString(),
-                                    name: userSnapshot.data!.name.toString(),
-                                    date: question.date as DateTime,
-                                    title: question.title.toString(),
-                                    description:
-                                        question.description as List<dynamic>,
-                                    upvotes: question.upVotes.toString(),
-                                    downvotes: question.downVotes.toString(),
-                                    comments: question.replyCount.toString(),
-                                    onPress: () {},
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      final doc = snapshot.data!.docs[index];
+                      // print(doc.data());
+
+                      final question = Question.fromMap(doc.data(), doc.id);
+                      
+                      // print(question);
+                      final user = _questionCubit.fetchUserById(question.uid);
+                      return FutureBuilder<User>(
+                        future: user,
+                        builder: (userContext, userSnapshot) {
+                          if (userSnapshot.hasError) {
+                            return Center(
+                              child: Text('Error: ${userSnapshot.error}'),
+                            );
+                          }
+                          if (!userSnapshot.hasData) {
+                            return Center(
+                              child: Container(
+                                  margin: EdgeInsets.all(size.height * 0.1),
+                                  child: const CircularProgressIndicator()),
+                            );
+                          }
+                          return BlocBuilder<QuestionCubit, QuestionState>(
+                            builder: (context, state) {
+                              return QuestionCard(
+                                qid: question.id,
+                                profileUrl: userSnapshot.data!.photo.toString(),
+                                name: userSnapshot.data!.name.toString(),
+                                date: question.date as DateTime,
+                                title: question.title.toString(),
+                                description:
+                                    question.description as List<dynamic>,
+                                upvotes: question.upVotes.toString(),
+                                downvotes: question.downVotes.toString(),
+                                comments: question.replyCount.toString(),
+                                onPress: () {},
+                                onUpvote: () {
+                                  _questionCubit.upvoteQuestion(
+                                    questionId: question.id,
+                                    updatedVote:
+                                        int.parse(question.upVotes.toString()) +
+                                            1,
                                   );
                                 },
+                                onDownvote: () {
+                                  _questionCubit.downvoteQuestion(
+                                    questionId: question.id,
+                                    updatedVote: int.parse(
+                                            question.downVotes.toString()) -
+                                        1,
+                                  );
+                                },
+                                imageUrl: question.imageUrl.toString(),
                               );
-                            });
-                      });
-                }),
+                            },
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
           ),
         ),
       ),

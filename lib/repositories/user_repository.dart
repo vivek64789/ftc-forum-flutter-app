@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ftc_forum/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:ftc_forum/models/question.dart';
+import 'package:ftc_forum/models/reply.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserRepository {
@@ -43,6 +44,16 @@ class UserRepository {
     return snapshot;
   }
 
+  Stream<firestore.QuerySnapshot<Map<String, dynamic>>> fetchRepliesOfQuestion(
+      String id) {
+    final snapshot = _firestore
+        .collection("replies")
+        .where('qid', isEqualTo: id)
+        .snapshots();
+
+    return snapshot;
+  }
+
   Future<void> createQuestion({
     required Question question,
   }) async {
@@ -55,10 +66,145 @@ class UserRepository {
         'section': question.section!.id,
         'category': question.category!.id,
         'imageUrl': question.imageUrl,
+        'upvotes': 0,
+        'downvotes': 0,
+        'upVotedBy': [],
+        'downVotedBy': [],
+        'replyCount': 0,
+        'replies': [],
       });
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<void> createReply({
+    required Reply reply,
+  }) async {
+    try {
+      await _firestore.collection("replies").add({
+        'uid': reply.uid,
+        'qid': reply.qid,
+        'date': DateTime.now(),
+        'description': reply.jsonDescription,
+        'upvotes': 0,
+        'downvotes': 0,
+        'upVotedBy': [],
+        'downVotedBy': [],
+      }).then((value) async {
+        await _firestore.collection("questions").doc(reply.qid).update({
+          'replies': firestore.FieldValue.arrayUnion([value.id]),
+        });
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> upvoteQuestion(
+      {required String questionId, required int updatedVote}) async {
+    print(questionId);
+    print(updatedVote);
+    try {
+      await _firestore.collection("questions").doc(questionId).update({
+        'upvotes': updatedVote,
+      });
+      await _firestore.collection("questions").doc(questionId).set({
+        'upvotes': updatedVote,
+      }, firestore.SetOptions(merge: true));
+    } catch (e) {}
+  }
+
+  Future<void> downvoteQuestion(
+      {required String questionId, required int updatedVote}) async {
+    try {
+      await _firestore.collection("questions").doc(questionId).update({
+        'downvotes': updatedVote,
+      });
+    } catch (e) {}
+  }
+
+  Future<void> upvoteReply(
+      {required String replyId,
+      required int updatedVote,
+      required String uid}) async {
+    try {
+      await _firestore.collection("replies").doc(replyId).update({
+        'upvotes': updatedVote,
+      });
+
+      await _firestore.collection("replies").doc(replyId).update({
+        'upVotedBy': firestore.FieldValue.arrayUnion([uid]),
+      });
+    } catch (e) {}
+  }
+
+  Future<void> decreaseUpvoteReply(
+      {required String replyId,
+      required int updatedVote,
+      required String uid}) async {
+    try {
+      // decreasing upvotes
+      await _firestore.collection("replies").doc(replyId).update({
+        'upvotes': updatedVote,
+      });
+
+      // removing uid from upVotedBy
+
+      await _firestore.collection("replies").doc(replyId).update({
+        'upVotedBy': firestore.FieldValue.arrayRemove([uid]),
+      });
+    } catch (e) {}
+  }
+
+  Future<void> downvoteReply(
+      {required String replyId,
+      required int updatedVote,
+      required String uid}) async {
+    try {
+      await _firestore.collection("replies").doc(replyId).update({
+        'downvotes': updatedVote,
+      });
+      await _firestore.collection("replies").doc(replyId).update({
+        'downVotedBy': firestore.FieldValue.arrayUnion([uid]),
+      });
+    } catch (e) {}
+  }
+
+  Future<void> decreaseDownvoteReply(
+      {required String replyId,
+      required int updatedVote,
+      required String uid}) async {
+    try {
+      await _firestore.collection("replies").doc(replyId).update({
+        'downvotes': updatedVote,
+      });
+      await _firestore.collection("replies").doc(replyId).update({
+        'downVotedBy': firestore.FieldValue.arrayRemove([uid]),
+      });
+    } catch (e) {}
+  }
+
+  Future<int> getQuestionUpvotes(String questionId) async {
+    final snapshot =
+        await _firestore.collection("questions").doc(questionId).get();
+    return snapshot.data()!['upvotes'];
+  }
+
+  Future<int> getQuestionDownvotes(String questionId) async {
+    final snapshot =
+        await _firestore.collection("questions").doc(questionId).get();
+    return snapshot.data()!['downvotes'];
+  }
+
+  Future<int> getReplyUpvotes(String replyId) async {
+    final snapshot = await _firestore.collection("replies").doc(replyId).get();
+    return snapshot.data()!['upvotes'];
+  }
+
+  Future<int> getReplyDownvotes(String replyId) async {
+    final snapshot = await _firestore.collection("replies").doc(replyId).get();
+    return snapshot.data()!['downvotes'];
   }
 
   Future<User> fetchUserById(String id) async {

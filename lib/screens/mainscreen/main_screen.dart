@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ftc_forum/cubits/login/login_cubit.dart';
 import 'package:ftc_forum/cubits/users/question/question_cubit.dart';
+import 'package:ftc_forum/cubits/users/reply/reply_cubit.dart';
 import 'package:ftc_forum/repositories/auth_repository.dart';
 import 'package:ftc_forum/repositories/user_repository.dart';
 import 'package:ftc_forum/screens/categories/categories_screen.dart';
@@ -19,8 +20,15 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int currentNavigationIndex = 0;
   final screen = [
-    BlocProvider(
-      create: (context) => QuestionCubit(UserRepository()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => QuestionCubit(UserRepository()),
+        ),
+        BlocProvider(
+          create: (context) => ReplyCubit(UserRepository()),
+        ),
+      ],
       child: HomeScreen(),
     ),
     const CategoriesScreen(),

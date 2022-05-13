@@ -90,6 +90,18 @@ class QuestionCubit extends Cubit<QuestionState> {
     );
   }
 
+  Future<void> upvoteQuestion({required String questionId,required int updatedVote}) async {
+    emit(state.copyWith(status: QuestionStatus.loading));
+    await _userRepository.upvoteQuestion(questionId: questionId, updatedVote: updatedVote);
+    emit(state.copyWith(status: QuestionStatus.success));
+  }
+
+  Future<void> downvoteQuestion({required String questionId,required int updatedVote}) async {
+    emit(state.copyWith(status: QuestionStatus.loading));
+    await _userRepository.downvoteQuestion(questionId: questionId, updatedVote: updatedVote);
+    emit(state.copyWith(status: QuestionStatus.success));
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> fetchCategories() {
     emit(state.copyWith(status: QuestionStatus.loading));
     final result = _userRepository.fetchCategories();

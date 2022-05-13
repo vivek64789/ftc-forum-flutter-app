@@ -20,6 +20,18 @@ class Body extends StatelessWidget {
           listener: (context, state) {
             if (state.status == RegisterStatus.success) {
               print("Register Success");
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginScreen(),
+                ),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("You are successfully Registered"),
+                ),
+              );
             } else if (state.status == RegisterStatus.loading) {
               print("Register Loading");
             } else if (state.status == RegisterStatus.error) {
@@ -133,6 +145,7 @@ class Body extends StatelessWidget {
               AlreadyHaveAnAccountCheck(
                 login: false,
                 press: () {
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(

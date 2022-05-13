@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
-import 'package:ftc_forum/constants.dart';
+import 'package:ftc_forum/cubits/users/reply/reply_cubit.dart';
+import 'package:ftc_forum/repositories/user_repository.dart';
 import 'package:ftc_forum/widgets/replies_thread.dart';
 import 'package:ftc_forum/widgets/vote_button.dart';
 
 class QuestionCard extends StatefulWidget {
+  final String qid;
   final String profileUrl;
+  final String imageUrl;
   final String name;
   final DateTime date;
   final String title;
   final List<dynamic> description;
   final String upvotes;
+  final Function onUpvote;
   final String downvotes;
+  final Function onDownvote;
   final String comments;
   final String category;
   final Function onPress;
@@ -19,6 +25,8 @@ class QuestionCard extends StatefulWidget {
   QuestionCard({
     Key? key,
     required this.name,
+    required this.qid,
+    required this.imageUrl,
     required this.profileUrl,
     required this.date,
     required this.title,
@@ -27,6 +35,8 @@ class QuestionCard extends StatefulWidget {
     this.downvotes = "0",
     this.comments = "0",
     required this.onPress,
+    required this.onDownvote,
+    required this.onUpvote,
     this.category = "General",
     this.bgColor = Colors.white,
     this.textColor = Colors.white,
@@ -105,7 +115,8 @@ class _QuestionCardState extends State<QuestionCard> {
                       style: Theme.of(context).textTheme.displaySmall,
                     ),
                     quill.QuillEditor.basic(
-                        controller: _quillController, readOnly: true)
+                        controller: _quillController, readOnly: true),
+                    Image(image: NetworkImage(widget.imageUrl)),
                   ],
                 ),
               ),
@@ -120,19 +131,19 @@ class _QuestionCardState extends State<QuestionCard> {
                       VoteButton(
                         icon: Icons.thumb_up,
                         isSelected: false,
-                        onPress: () {},
+                        onPress: () => widget.onUpvote(),
                       ),
                       Text(
-                        1.toString(),
+                        widget.upvotes,
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       VoteButton(
                         icon: Icons.thumb_down,
-                        isSelected: true,
-                        onPress: () {},
+                        isSelected: false,
+                        onPress: () => widget.onDownvote(),
                       ),
                       Text(
-                        1.toString(),
+                        widget.downvotes,
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       VoteButton(
@@ -140,12 +151,13 @@ class _QuestionCardState extends State<QuestionCard> {
                         isSelected: false,
                         onPress: () {
                           setState(() {
+                            context.read<ReplyCubit>().qidChanged(widget.qid);
                             isCommentActive = !isCommentActive;
                           });
                         },
                       ),
                       Text(
-                        1.toString(),
+                        widget.comments,
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],
@@ -157,7 +169,12 @@ class _QuestionCardState extends State<QuestionCard> {
                 ],
               ),
               // Only show when comment is active
-              isCommentActive ? RepliesThread(size: size) : Container()
+              isCommentActive
+                  ? BlocProvider(
+                      create: (_) => ReplyCubit(UserRepository()),
+                      child: RepliesThread(size: size, qid: widget.qid),
+                    )
+                  : Container()
             ],
           ),
         ),

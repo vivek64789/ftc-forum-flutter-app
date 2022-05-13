@@ -19,6 +19,7 @@ class Question extends Equatable {
   final Section? section;
   final QuestionCategory? category;
   final String? imageUrl;
+  final List<dynamic>? replies;
 
   const Question({
     required this.id,
@@ -35,6 +36,7 @@ class Question extends Equatable {
     this.section,
     this.imageUrl,
     this.category,
+    this.replies,
   });
 
   static const empty = Question(id: '', uid: "");
@@ -58,18 +60,23 @@ class Question extends Equatable {
         downVotedBy,
         category,
         jsonDescription,
+        replies,
       ];
 
-  static Question fromMap(Map<String, dynamic> map) {
+  static Question fromMap(Map<String, dynamic> map, id) {
     return Question(
-      id: map['uid'] ?? '',
+      id: id ?? '',
       uid: map['uid'] ?? '',
       title: map['title'] ?? '',
       description: jsonDecode(map['description']) as List<dynamic>,
       date: DateTime.fromMicrosecondsSinceEpoch(map['date'].seconds * 1000000),
-      upVotes: map['upVotes'] ?? 0,
-      downVotes: map['downVotes'] ?? 0,
-      replyCount: map['replyCount'] ?? 0,
+      upVotes: map['upvotes'],
+      downVotes: map['downvotes'],
+      replyCount: map['replyCount'],
+      imageUrl: map['imageUrl'],
+      // upVotedBy: jsonDecode(map['upVotedBy']),
+      // downVotedBy: jsonDecode(map['downVotedBy']),
+      replies: map['replies'] as List<dynamic>,
     );
   }
 }

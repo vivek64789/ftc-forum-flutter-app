@@ -30,6 +30,11 @@ class Body extends StatelessWidget {
                   builder: (context) => MainScreen(),
                 ),
               );
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("You are successfully Logged in"),
+                ),
+              );
             } else if (state.status == LoginStatus.error) {
               showDialog(
                   context: context,
@@ -106,7 +111,7 @@ class Body extends StatelessWidget {
               SizedBox(height: size.height * 0.03),
               AlreadyHaveAnAccountCheck(
                 press: () {
-                  // Navigator.pushNamed(context, RegisterScreen.routeName);
+                  Navigator.pop(context);
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => RegisterScreen()),
                   );
