@@ -57,7 +57,8 @@ class DefaultFirebaseOptions {
     appId: '1:138011552580:android:90263dcc628e8bd0cc4511',
     messagingSenderId: '138011552580',
     projectId: 'ftc-forum',
-    databaseURL: 'https://ftc-forum-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://ftc-forum-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'ftc-forum.appspot.com',
   );
 }
