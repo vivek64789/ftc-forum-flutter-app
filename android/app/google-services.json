@@ -1,33 +1,34 @@
 {
   "project_info": {
-    "project_number": "688383518309",
-    "project_id": "ftc-forum-new",
-    "storage_bucket": "ftc-forum-new.appspot.com"
+    "project_number": "138011552580",
+    "firebase_url": "https://ftc-forum-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "ftc-forum",
+    "storage_bucket": "ftc-forum.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:688383518309:android:7b205f0c4bb6e47ed1888c",
+        "mobilesdk_app_id": "1:138011552580:android:90263dcc628e8bd0cc4511",
         "android_client_info": {
           "package_name": "com.example.ftc_forum"
         }
       },
       "oauth_client": [
         {
-          "client_id": "688383518309-lrbsp06o73bo164u3a5r52plmqe1fd6n.apps.googleusercontent.com",
+          "client_id": "138011552580-78s1m4uugmindbtheacjfl30srvbsts1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD1ydJOSqyby-Gw2Kfg0nyzywU-AGnbvF4"
+          "current_key": "AIzaSyBhz-TlFN7UzaRa4osswRj55KY9YR2w8Ow"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "688383518309-lrbsp06o73bo164u3a5r52plmqe1fd6n.apps.googleusercontent.com",
+              "client_id": "138011552580-78s1m4uugmindbtheacjfl30srvbsts1.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

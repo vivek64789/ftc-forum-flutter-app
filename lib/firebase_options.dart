@@ -26,7 +26,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -50,20 +53,11 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD1ydJOSqyby-Gw2Kfg0nyzywU-AGnbvF4',
-    appId: '1:688383518309:android:7b205f0c4bb6e47ed1888c',
-    messagingSenderId: '688383518309',
-    projectId: 'ftc-forum-new',
-    storageBucket: 'ftc-forum-new.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCq8QYcFZmFkHrNa10yeqZ-SNkW-ls7-Js',
-    appId: '1:688383518309:ios:9d4a1f90f1673801d1888c',
-    messagingSenderId: '688383518309',
-    projectId: 'ftc-forum-new',
-    storageBucket: 'ftc-forum-new.appspot.com',
-    iosClientId: '688383518309-sn7vtu3r32g252f3hiofkdde1i71doft.apps.googleusercontent.com',
-    iosBundleId: 'com.example.ftcForum',
+    apiKey: 'AIzaSyBhz-TlFN7UzaRa4osswRj55KY9YR2w8Ow',
+    appId: '1:138011552580:android:90263dcc628e8bd0cc4511',
+    messagingSenderId: '138011552580',
+    projectId: 'ftc-forum',
+    databaseURL: 'https://ftc-forum-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'ftc-forum.appspot.com',
   );
 }
