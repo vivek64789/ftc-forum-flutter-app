@@ -9,6 +9,8 @@ import 'package:ftc_forum/cubits/users/profile/profile_cubit.dart';
 import 'package:ftc_forum/models/user_model.dart';
 import 'package:ftc_forum/repositories/admin_repository.dart';
 import 'package:ftc_forum/screens/admin/category/admin_category_screen.dart';
+import 'package:ftc_forum/screens/admin/questions/admin_view_questions_screen.dart';
+import 'package:ftc_forum/screens/admin/replies/admin_view_replies_screen.dart';
 import 'package:ftc_forum/screens/admin/section/admin_section_screen.dart';
 import 'package:ftc_forum/widgets/rounded_button.dart';
 
@@ -77,7 +79,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     margin: const EdgeInsets.all(8.0),
                                     child: CircleAvatar(
                                       backgroundImage: NetworkImage(
-                                        user.photo.toString(),
+                                        user.photo.toString().isEmpty
+                                            ? "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1024px-Circle-icons-profile.svg.png"
+                                            : user.photo.toString(),
                                       ),
                                       radius: size.height * 0.04,
                                     ),
@@ -197,6 +201,42 @@ class AdminSettings extends StatelessWidget {
             );
           },
           child: const Text("Manage Sections"),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) {
+                  return BlocProvider(
+                    create: (_) => AdminCategoryCubit(
+                      AdminRepository(),
+                    ),
+                    child: AdminViewQuestionsScreen(),
+                  );
+                },
+              ),
+            );
+          },
+          child: const Text("Manage Questions"),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) {
+                  return BlocProvider(
+                    create: (_) => AdminCategoryCubit(
+                      AdminRepository(),
+                    ),
+                    child: AdminViewRepliesScreen(),
+                  );
+                },
+              ),
+            );
+          },
+          child: const Text("Manage Replies"),
         ),
         SizedBox(height: size.height * 0.01),
       ],

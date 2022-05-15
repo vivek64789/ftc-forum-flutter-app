@@ -52,6 +52,16 @@ class UserRepository {
     return snapshot;
   }
 
+  Stream<firestore.QuerySnapshot<Map<String, dynamic>>>
+      fetchTotalQuestionsByUserId(String uid) {
+    final snapshot = _firestore
+        .collection("questions")
+        .where('uid', isEqualTo: uid)
+        .snapshots();
+
+    return snapshot;
+  }
+
   Future<firestore.DocumentSnapshot<Map<String, dynamic>>> fetchCategoryById(
       String id) async {
     final snapshot = _firestore.collection("categories").doc(id);
@@ -119,6 +129,22 @@ class UserRepository {
     }
   }
 
+  Future<void> updatePostQuestion({
+    required Question question,
+  }) async {
+    try {
+      await _firestore.collection("questions").doc(question.id).update({
+        'title': question.title,
+        'description': question.jsonDescription,
+        'section': question.section!.id,
+        'category': question.category!.id,
+        'imageUrl': question.imageUrl,
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future<void> createReply({
     required Reply reply,
   }) async {
@@ -142,6 +168,35 @@ class UserRepository {
     }
   }
 
+  Future<void> updateReply({
+    required Reply reply,
+  }) async {
+    try {
+      await _firestore.collection("replies").doc(reply.id).update({
+        'description': reply.jsonDescription,
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> deleteComment({required String id, required String qid}) async {
+    try {
+      await _firestore
+          .collection("replies")
+          .doc(id)
+          .delete()
+          .then((value) async {
+        //
+        await _firestore.collection("questions").doc(qid).update({
+          'replies': firestore.FieldValue.arrayRemove([id]),
+        });
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future<void> upvoteQuestion(
       {required String questionId,
       required int updatedVote,
@@ -153,6 +208,13 @@ class UserRepository {
       await _firestore.collection("questions").doc(questionId).update({
         'upVotedBy': firestore.FieldValue.arrayUnion([uid]),
       });
+    } catch (e) {}
+  }
+
+  Future<void> deleteQuestion({required String questionId}) async {
+    print(questionId);
+    try {
+      await _firestore.collection("questions").doc(questionId).delete();
     } catch (e) {}
   }
 

@@ -32,6 +32,16 @@ class DefaultFirebaseOptions {
           'DefaultFirebaseOptions have not been configured for macos - '
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
+      case TargetPlatform.windows:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      case TargetPlatform.linux:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for linux - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       default:
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
@@ -40,20 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDNzaUcekwiLZMLYNH2rHHSdGr-jJed0hE',
-    appId: '1:792868097322:android:24edf4b3829e71bb982253',
-    messagingSenderId: '792868097322',
-    projectId: 'ftcforum',
-    storageBucket: 'ftcforum.appspot.com',
+    apiKey: 'AIzaSyD1ydJOSqyby-Gw2Kfg0nyzywU-AGnbvF4',
+    appId: '1:688383518309:android:7b205f0c4bb6e47ed1888c',
+    messagingSenderId: '688383518309',
+    projectId: 'ftc-forum-new',
+    storageBucket: 'ftc-forum-new.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBk6vuhrp_l-0-bkfHfDRQLp2TEjlKS4j8',
-    appId: '1:792868097322:ios:c4facb8a6005faed982253',
-    messagingSenderId: '792868097322',
-    projectId: 'ftcforum',
-    storageBucket: 'ftcforum.appspot.com',
-    iosClientId: '792868097322-2ppvc4nnl8vaasl247as811rh36q63rm.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCq8QYcFZmFkHrNa10yeqZ-SNkW-ls7-Js',
+    appId: '1:688383518309:ios:9d4a1f90f1673801d1888c',
+    messagingSenderId: '688383518309',
+    projectId: 'ftc-forum-new',
+    storageBucket: 'ftc-forum-new.appspot.com',
+    iosClientId: '688383518309-sn7vtu3r32g252f3hiofkdde1i71doft.apps.googleusercontent.com',
     iosBundleId: 'com.example.ftcForum',
   );
 }

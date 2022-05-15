@@ -66,7 +66,8 @@ class _SectionScreenState extends State<SectionScreen> {
                       final question = Question.fromMap(doc.data(), doc.id);
 
                       // print(question);
-                      final user = _questionCubit.fetchUserById(question.uid);
+                      final user =
+                          _questionCubit.fetchUserById(question.uid.toString());
                       return FutureBuilder<User>(
                         future: user,
                         builder: (userContext, userSnapshot) {
@@ -88,8 +89,10 @@ class _SectionScreenState extends State<SectionScreen> {
                                 create: (context) =>
                                     ReplyCubit(UserRepository()),
                                 child: QuestionCard(
+                                  category: question.categoryId.toString(),
+                                  section: question.sectionId.toString(),
                                   qid: question.id,
-                                  uid: question.uid,
+                                  uid: question.uid.toString(),
                                   profileUrl:
                                       userSnapshot.data!.photo.toString(),
                                   name: userSnapshot.data!.name.toString(),
@@ -133,6 +136,10 @@ class _SectionScreenState extends State<SectionScreen> {
                 builder: (context) => BlocProvider(
                   create: (_) => QuestionCubit(UserRepository()),
                   child: WriteQuestion(
+                    sectionId: "",
+                    categoryId: "",
+                    qid: "",
+                    uid: "",
                     size: size,
                   ),
                 ),

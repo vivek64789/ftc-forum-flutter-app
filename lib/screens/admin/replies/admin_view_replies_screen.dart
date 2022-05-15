@@ -6,8 +6,8 @@ import 'package:ftc_forum/models/question_category.dart';
 import 'package:ftc_forum/repositories/admin_repository.dart';
 import 'package:ftc_forum/screens/admin/category/add_new_category_screen.dart';
 
-class AdminCategoryScreen extends StatelessWidget {
-  AdminCategoryScreen({Key? key}) : super(key: key);
+class AdminViewRepliesScreen extends StatelessWidget {
+  AdminViewRepliesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class AdminCategoryScreen extends StatelessWidget {
         BlocProvider.of<AdminCategoryCubit>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Category'),
+        title: const Text('Admin Manage Replies'),
         centerTitle: true,
       ),
       body: BlocListener<AdminCategoryCubit, AdminCategoryState>(
@@ -23,7 +23,7 @@ class AdminCategoryScreen extends StatelessWidget {
           // TODO: implement listener
         },
         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: context.read<AdminCategoryCubit>().fetchCategories(),
+          stream: context.read<AdminCategoryCubit>().fetchReplies(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(
@@ -47,34 +47,12 @@ class AdminCategoryScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     title: Text(
-                      snapshot.data!.docs[index].data()["categoryName"],
+                      snapshot.data!.docs[index].data()["description"],
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return BlocProvider(
-                                    create: (context) =>
-                                        AdminCategoryCubit(AdminRepository()),
-                                    child: AddNewCategoryScreen(
-                                      initialCategory: QuestionCategory(
-                                        id: snapshot.data!.docs[index].id,
-                                        categoryName: snapshot.data!.docs[index]
-                                            .data()["categoryName"],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.edit),
-                        ),
+                       
                         context.read<AdminCategoryCubit>().state.status ==
                                 CategoryStatus.loading
                             ? const CircularProgressIndicator()
@@ -97,11 +75,12 @@ class AdminCategoryScreen extends StatelessWidget {
                                           TextButton(
                                             child: const Text("Delete"),
                                             onPressed: () {
-                                              _adminCategoryCubit
-                                                  .deleteCategory(
-                                                      snapshot
-                                                          .data!.docs[index].id,
-                                                      context);
+                                              _adminCategoryCubit.deleteReply(
+                                                  snapshot.data!.docs[index].id,
+                                                  snapshot.data!.docs[index]
+                                                      .data()['qid'],
+                                                  context);
+
                                               Navigator.of(context).pop();
                                             },
                                           ),

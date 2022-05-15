@@ -11,8 +11,24 @@ import 'package:ftc_forum/models/question.dart';
 import 'package:ftc_forum/widgets/rounded_button.dart';
 
 class WriteQuestion extends StatefulWidget {
+  final String qid;
+  final String uid;
+  final String categoryId;
+  final String sectionId;
+  final String? title;
+  final String? imageUrl;
+  final dynamic description;
+  final bool isInit;
   WriteQuestion({
     Key? key,
+    required this.qid,
+    required this.uid,
+    required this.categoryId,
+    required this.sectionId,
+    this.title = "",
+    this.imageUrl = "",
+    this.description,
+    this.isInit = false,
     required this.size,
   }) : super(key: key);
 
@@ -23,15 +39,47 @@ class WriteQuestion extends StatefulWidget {
 }
 
 class _WriteQuestionState extends State<WriteQuestion> {
-  final quill.QuillController _controller = quill.QuillController.basic();
+  quill.QuillController _controller = quill.QuillController.basic();
 
   List<String> items = [
     'Question',
     'Answer',
   ];
-
   dynamic selectedCategoryItem;
   dynamic selectedSectionItem;
+  List<String> a = [];
+
+  @override
+  void initState() {
+    if (widget.isInit) {
+      selectedCategoryItem =
+          widget.categoryId.isEmpty ? null : widget.categoryId;
+      selectedSectionItem = widget.sectionId.isEmpty ? null : widget.sectionId;
+      context
+          .read<QuestionCubit>()
+          .selectedCategoryIdChanged(selectedCategoryItem);
+      context
+          .read<QuestionCubit>()
+          .selectedSectionIdChanged(selectedSectionItem);
+      if (widget.title!.isNotEmpty) {
+        context.read<QuestionCubit>().titleChanged(widget.title.toString());
+      }
+      if (widget.imageUrl!.isNotEmpty) {
+        context
+            .read<QuestionCubit>()
+            .imageUrlChanged(widget.imageUrl.toString());
+      }
+
+      if (widget.description == null) {
+      } else {
+        _controller = quill.QuillController(
+          document: quill.Document.fromJson(widget.description),
+          selection: const TextSelection.collapsed(offset: 0),
+        );
+      }
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,6 +229,7 @@ class _WriteQuestionState extends State<WriteQuestion> {
                             BorderRadius.circular(widget.size.height * 0.01),
                       ),
                       child: TextFormField(
+                        initialValue: widget.title,
                         onChanged: ((value) =>
                             context.read<QuestionCubit>().titleChanged(value)),
                         decoration: const InputDecoration(
@@ -234,25 +283,48 @@ class _WriteQuestionState extends State<WriteQuestion> {
                   ),
                 ),
 
-                BlocBuilder<QuestionCubit, QuestionState>(
-                  builder: (context, state) {
-                    return state.status == QuestionStatus.loading
-                        ? const CircularProgressIndicator()
-                        : RoundedButton(
-                            text: "Post",
-                            press: () {
-                              var json = jsonEncode(
-                                  _controller.document.toDelta().toJson());
-                              context
-                                  .read<QuestionCubit>()
-                                  .descriptionChanged(json);
-                              context
-                                  .read<QuestionCubit>()
-                                  .postQuestion(context);
-                            },
-                          );
-                  },
-                ),
+                widget.qid.isEmpty
+                    ? BlocBuilder<QuestionCubit, QuestionState>(
+                        builder: (context, state) {
+                          return state.status == QuestionStatus.loading
+                              ? const CircularProgressIndicator()
+                              : RoundedButton(
+                                  text: "Post",
+                                  press: () {
+                                    var json = jsonEncode(_controller.document
+                                        .toDelta()
+                                        .toJson());
+                                    context
+                                        .read<QuestionCubit>()
+                                        .descriptionChanged(json);
+                                    context
+                                        .read<QuestionCubit>()
+                                        .postQuestion(context);
+                                  },
+                                );
+                        },
+                      )
+                    : BlocBuilder<QuestionCubit, QuestionState>(
+                        builder: (context, state) {
+                          return state.status == QuestionStatus.loading
+                              ? const CircularProgressIndicator()
+                              : RoundedButton(
+                                  text: "Update Post",
+                                  press: () {
+                                    var json = jsonEncode(_controller.document
+                                        .toDelta()
+                                        .toJson());
+                                    context
+                                        .read<QuestionCubit>()
+                                        .descriptionChanged(json);
+                                    context
+                                        .read<QuestionCubit>()
+                                        .updatePostQuestion(
+                                            context, widget.qid);
+                                  },
+                                );
+                        },
+                      ),
               ],
             ),
           ),

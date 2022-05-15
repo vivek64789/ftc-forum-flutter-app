@@ -23,6 +23,18 @@ class AdminRepository {
     return snapshot;
   }
 
+  Stream<firestore.QuerySnapshot<Map<String, dynamic>>> fetchQuestions() {
+    final snapshot = _firestore.collection("questions").snapshots();
+
+    return snapshot;
+  }
+
+  Stream<firestore.QuerySnapshot<Map<String, dynamic>>> fetchReplies() {
+    final snapshot = _firestore.collection("replies").snapshots();
+
+    return snapshot;
+  }
+
   Stream<firestore.QuerySnapshot<Map<String, dynamic>>> fetchSections() {
     final snapshot = _firestore.collection("sections").snapshots();
 
@@ -59,6 +71,35 @@ class AdminRepository {
   }) async {
     try {
       await _firestore.collection("categories").doc(id).delete();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> deleteQuestion({
+    required String id,
+  }) async {
+    try {
+      await _firestore.collection("questions").doc(id).delete();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> deleteReply({
+    required String id,
+    required String qid,
+  }) async {
+    try {
+      await _firestore
+          .collection("replies")
+          .doc(id)
+          .delete()
+          .then((value) async {
+        await _firestore.collection("questions").doc(qid).update({
+          'replies': firestore.FieldValue.arrayRemove([id]),
+        });
+      });
     } catch (e) {
       print(e.toString());
     }
@@ -110,7 +151,7 @@ class AdminRepository {
   Future<String> uploadImage({required String id, required String name}) async {
     File imageFile;
     final picker = ImagePicker();
-    
+
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile == null) {
       return "";

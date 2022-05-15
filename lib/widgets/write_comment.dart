@@ -10,11 +10,17 @@ import 'package:ftc_forum/widgets/rounded_button.dart';
 
 class WriteComment extends StatelessWidget {
   final String qid;
-  WriteComment({
-    Key? key,
-    required this.qid,
-    required this.size,
-  }) : super(key: key);
+  final String? id;
+  final List<dynamic>? description;
+  final bool? isInit;
+  WriteComment(
+      {Key? key,
+      required this.qid,
+      required this.size,
+      this.id,
+      this.description,
+      this.isInit})
+      : super(key: key);
 
   final Size size;
   final quill.QuillController _controller = quill.QuillController.basic();
@@ -22,7 +28,7 @@ class WriteComment extends StatelessWidget {
   Widget build(BuildContext context) {
     final _replyCubit = BlocProvider.of<ReplyCubit>(context);
     final _appBloc = BlocProvider.of<AppBloc>(context);
-    
+
     _replyCubit.qidChanged(qid);
     _replyCubit.uidChanged(_appBloc.state.user.id);
     return BlocListener<ReplyCubit, ReplyState>(

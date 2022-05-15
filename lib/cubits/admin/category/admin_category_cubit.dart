@@ -60,6 +60,20 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
     return result;
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> fetchQuestions() {
+    emit(state.copyWith(status: CategoryStatus.loading));
+    final result = _adminRepository.fetchQuestions();
+    emit(state.copyWith(status: CategoryStatus.success));
+    return result;
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> fetchReplies() {
+    emit(state.copyWith(status: CategoryStatus.loading));
+    final result = _adminRepository.fetchReplies();
+    emit(state.copyWith(status: CategoryStatus.success));
+    return result;
+  }
+
   Future<void> deleteCategory(String id, BuildContext context) async {
     emit(state.copyWith(status: CategoryStatus.loading));
     try {
@@ -68,6 +82,36 @@ class AdminCategoryCubit extends Cubit<AdminCategoryState> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Category deleted successfully'),
       ));
+    } catch (e) {
+      emit(state.copyWith(status: CategoryStatus.success));
+    }
+  }
+
+  Future<void> deleteQuestion(String id, BuildContext context) async {
+    emit(state.copyWith(status: CategoryStatus.loading));
+    try {
+      _adminRepository.deleteQuestion(id: id);
+      emit(state.copyWith(status: CategoryStatus.success));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Category deleted successfully'),
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(status: CategoryStatus.success));
+    }
+  }
+
+  Future<void> deleteReply(String id, String qid, BuildContext context) async {
+    emit(state.copyWith(status: CategoryStatus.loading));
+    try {
+      _adminRepository.deleteReply(id: id, qid:qid);
+      emit(state.copyWith(status: CategoryStatus.success));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Category deleted successfully'),
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(status: CategoryStatus.success));
     }

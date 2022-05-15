@@ -62,7 +62,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       final question = Question.fromMap(doc.data(), doc.id);
 
                       // print(question);
-                      final user = _questionCubit.fetchUserById(question.uid);
+                      final user =
+                          _questionCubit.fetchUserById(question.uid.toString());
                       return FutureBuilder<User>(
                         future: user,
                         builder: (userContext, userSnapshot) {
@@ -81,8 +82,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           return BlocBuilder<QuestionCubit, QuestionState>(
                             builder: (context, state) {
                               return QuestionCard(
+                                section: question.sectionId.toString(),
+                                category: question.categoryId.toString(),
                                 qid: question.id,
-                                uid: question.uid,
+                                uid: question.uid.toString(),
                                 profileUrl: userSnapshot.data!.photo.toString(),
                                 name: userSnapshot.data!.name.toString(),
                                 date: question.date as DateTime,
@@ -124,6 +127,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (context) => BlocProvider(
                   create: (_) => QuestionCubit(UserRepository()),
                   child: WriteQuestion(
+                    categoryId: "",
+                    sectionId: "",
+                    qid: "",
+                    uid: "",
                     size: size,
                   ),
                 ),

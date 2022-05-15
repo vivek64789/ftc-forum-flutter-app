@@ -41,34 +41,34 @@ class ReplyCubit extends Cubit<ReplyState> {
 
   Future<void> upvoteReply(
       {required String replyId, required int updatedVote}) async {
-    emit(state.copyWith(status: ReplyStatus.loading));
+    emit(state.copyWith(upvoteStatus: ReplyUpvoteStatus.loading));
     await _userRepository.upvoteReply(
         replyId: replyId, updatedVote: updatedVote, uid: state.uid);
-    emit(state.copyWith(status: ReplyStatus.success));
+    emit(state.copyWith(upvoteStatus: ReplyUpvoteStatus.success));
   }
 
   Future<void> downvoteReply(
       {required String replyId, required int updatedVote}) async {
-    emit(state.copyWith(status: ReplyStatus.loading));
+    emit(state.copyWith(downvoteStatus: ReplyDownvoteStatus.loading));
     await _userRepository.downvoteReply(
         replyId: replyId, updatedVote: updatedVote, uid: state.uid);
-    emit(state.copyWith(status: ReplyStatus.success));
+    emit(state.copyWith(downvoteStatus: ReplyDownvoteStatus.success));
   }
 
   Future<void> decreaseUpvoteReply(
       {required String replyId, required int updatedVote}) async {
-    emit(state.copyWith(status: ReplyStatus.loading));
+    emit(state.copyWith(upvoteStatus: ReplyUpvoteStatus.loading));
     await _userRepository.decreaseUpvoteReply(
         replyId: replyId, updatedVote: updatedVote, uid: state.uid);
-    emit(state.copyWith(status: ReplyStatus.success));
+    emit(state.copyWith(upvoteStatus: ReplyUpvoteStatus.success));
   }
 
   Future<void> decreaseDownvoteReply(
       {required String replyId, required int updatedVote}) async {
-    emit(state.copyWith(status: ReplyStatus.loading));
+    emit(state.copyWith(downvoteStatus: ReplyDownvoteStatus.loading));
     await _userRepository.decreaseDownvoteReply(
         replyId: replyId, updatedVote: updatedVote, uid: state.uid);
-    emit(state.copyWith(status: ReplyStatus.success));
+    emit(state.copyWith(downvoteStatus: ReplyDownvoteStatus.success));
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> fetchRepliesOfQuestion(
@@ -81,7 +81,6 @@ class ReplyCubit extends Cubit<ReplyState> {
 
   Future<void> postReply(BuildContext context) async {
     emit(state.copyWith(status: ReplyStatus.loading));
-    print("This is qid in state ${state.qid}");
     final result = await _userRepository.createReply(
         reply: Reply(
       id: "",
@@ -92,7 +91,35 @@ class ReplyCubit extends Cubit<ReplyState> {
     emit(state.copyWith(status: ReplyStatus.success));
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text("Question Posted Successfully"),
+      content: Text("Reply Posted Successfully"),
+    ));
+  }
+
+  Future<void> deleteComment(
+      BuildContext context, String rid, String qid) async {
+    emit(state.copyWith(status: ReplyStatus.loading));
+    final result = await _userRepository.deleteComment(
+      id: rid,
+      qid: qid,
+    );
+    emit(state.copyWith(status: ReplyStatus.success));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("Reply Deleted Successfully"),
+    ));
+  }
+
+  Future<void> updatePostReply(BuildContext context, rid) async {
+    emit(state.copyWith(status: ReplyStatus.loading));
+    final result = await _userRepository.updateReply(
+        reply: Reply(
+      id: rid,
+      uid: state.uid,
+      jsonDescription: state.jsonDescription,
+    ));
+    emit(state.copyWith(status: ReplyStatus.success));
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("Reply Updated Successfully"),
     ));
   }
 

@@ -1,7 +1,7 @@
 {
   "file_generated_by": "FlutterFire CLI",
   "purpose": "FirebaseAppID & ProjectID for this Firebase app in this directory",
-  "GOOGLE_APP_ID": "1:792868097322:ios:c4facb8a6005faed982253",
-  "FIREBASE_PROJECT_ID": "ftcforum",
-  "GCM_SENDER_ID": "792868097322"
+  "GOOGLE_APP_ID": "1:688383518309:ios:9d4a1f90f1673801d1888c",
+  "FIREBASE_PROJECT_ID": "ftc-forum-new",
+  "GCM_SENDER_ID": "688383518309"
 }

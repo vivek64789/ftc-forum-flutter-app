@@ -6,13 +6,13 @@ enum ReplyStatus {
   success,
   error,
 }
-enum UpvoteStatus {
+enum ReplyUpvoteStatus {
   initial,
   loading,
   success,
   error,
 }
-enum DownvoteStatus {
+enum ReplyDownvoteStatus {
   initial,
   loading,
   success,
@@ -31,8 +31,8 @@ class ReplyState extends Equatable {
   final ReplyStatus status;
   final List<String> upVotedBy;
   final List<String> downVotedBy;
-  final UpvoteStatus upvoteStatus;
-  final DownvoteStatus downvoteStatus;
+  final ReplyUpvoteStatus upvoteStatus;
+  final ReplyDownvoteStatus downvoteStatus;
 
   ReplyState(
       {required this.id,
@@ -77,8 +77,8 @@ class ReplyState extends Equatable {
       downVotedBy: [],
       qid: '',
       jsonDescription: '',
-      upvoteStatus: UpvoteStatus.initial,
-      downvoteStatus: DownvoteStatus.initial,
+      upvoteStatus: ReplyUpvoteStatus.initial,
+      downvoteStatus: ReplyDownvoteStatus.initial,
       status: ReplyStatus.initial,
     );
   }
@@ -94,8 +94,8 @@ class ReplyState extends Equatable {
     List<String>? upVotedBy,
     int? downVotes,
     List<String>? downVotedBy,
-    UpvoteStatus? upvoteStatus,
-    DownvoteStatus? downvoteStatus,
+    ReplyUpvoteStatus? upvoteStatus,
+    ReplyDownvoteStatus? downvoteStatus,
     dynamic jsonDescription,
     ReplyStatus? status,
   }) {

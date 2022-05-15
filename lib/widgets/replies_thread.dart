@@ -77,8 +77,9 @@ class RepliesThread extends StatelessWidget {
                                     );
                                   }
                                   return ReplyCard(
-                                    id: reply.id,
+                                    id: doc.id,
                                     uid: reply.uid,
+                                    qid: qid,
                                     upvotedBy: reply.upVotedBy,
                                     downvotedBy: reply.downVotedBy,
                                     user: user,

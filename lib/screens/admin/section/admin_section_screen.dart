@@ -14,6 +14,8 @@ class AdminSectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AdminSectionCubit _adminSectionCubit =
+        BlocProvider.of<AdminSectionCubit>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Sections'),
@@ -87,11 +89,33 @@ class AdminSectionScreen extends StatelessWidget {
                             ? const CircularProgressIndicator()
                             : IconButton(
                                 onPressed: () {
-                                  context
-                                      .read<AdminSectionCubit>()
-                                      .deleteSection(
-                                          snapshot.data!.docs[index].id,
-                                          context);
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text("Delete Question"),
+                                        content: const Text(
+                                            "Are you sure you want to delete this question?"),
+                                        actions: [
+                                          TextButton(
+                                            child: const Text("Cancel"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: const Text("Delete"),
+                                            onPressed: () {
+                                              _adminSectionCubit.deleteSection(
+                                                  snapshot.data!.docs[index].id,
+                                                  context);
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 },
                                 icon:
                                     const Icon(Icons.delete, color: Colors.red),

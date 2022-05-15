@@ -25,6 +25,14 @@ class ProfileCubit extends Cubit<ProfileState> {
     return result;
   }
 
+  Stream<DocumentSnapshot<Map<String, dynamic>>> fetchUserProfileById(
+      String uid) {
+    emit(state.copyWith(status: ProfileStatus.loading));
+    final result = _userRepository.fetchUserProfile(uid);
+    emit(state.copyWith(status: ProfileStatus.success));
+    return result;
+  }
+
   Future<void> uploadImage(context) async {
     emit(state.copyWith(status: ProfileStatus.loading));
     try {

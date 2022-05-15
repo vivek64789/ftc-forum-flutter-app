@@ -6,7 +6,7 @@ import 'package:ftc_forum/models/section.dart';
 
 class Question extends Equatable {
   final String id;
-  final String uid;
+  final String? uid;
   final String? title;
   final List<dynamic>? description;
   final String? jsonDescription;
@@ -20,10 +20,12 @@ class Question extends Equatable {
   final QuestionCategory? category;
   final String? imageUrl;
   final List<dynamic>? replies;
+  final String? categoryId;
+  final String? sectionId;
 
   const Question({
     required this.id,
-    required this.uid,
+    this.uid,
     this.jsonDescription,
     this.upVotedBy,
     this.downVotedBy,
@@ -37,6 +39,8 @@ class Question extends Equatable {
     this.imageUrl,
     this.category,
     this.replies,
+    this.categoryId,
+    this.sectionId
   });
 
   static const empty = Question(id: '', uid: "");
@@ -61,6 +65,9 @@ class Question extends Equatable {
         category,
         jsonDescription,
         replies,
+        category,
+        sectionId,
+        categoryId
       ];
 
   static Question fromMap(Map<String, dynamic> map, id) {
@@ -77,6 +84,8 @@ class Question extends Equatable {
       upVotedBy: map['upVotedBy']?.cast<String>(),
       downVotedBy: map['downVotedBy']?.cast<String>(),
       replies: map['replies'] as List<dynamic>,
+      categoryId: map['category'],
+      sectionId: map['section'],
     );
   }
 }
