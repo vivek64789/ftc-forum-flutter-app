@@ -17,7 +17,20 @@ class SectionItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(10),
+          ),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: Offset(0, 5),
+            ),
+          ]),
       child: InkWell(
         splashColor: Colors.red,
         radius: 20,
@@ -29,7 +42,7 @@ class SectionItemWidget extends StatelessWidget {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               child: SizedBox(
-                height: size.height * 0.05,
+                height: size.height * 0.2,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(
                     size.width * 0.015,

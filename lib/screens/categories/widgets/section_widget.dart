@@ -62,9 +62,9 @@ class SectionWidget extends StatelessWidget {
                     height: size.height * 0.01,
                   ),
                   Container(
-                    height: size.height * 0.09,
+                    height: size.height * 0.4,
                     child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
+                      scrollDirection: Axis.vertical,
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
                         final doc = snapshot.data!.docs[index];

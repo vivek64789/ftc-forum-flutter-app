@@ -113,11 +113,13 @@ class _AddNewSectionScreenState extends State<AddNewSectionScreen> {
                 buildWhen: (previous, current) =>
                     previous.sectionName != current.sectionName,
                 builder: (context, state) {
-                  return IconButton(
-                      onPressed: () {
-                        _adminSectionCubit.uploadImage();
-                      },
-                      icon: const Icon(Icons.upload));
+                  return state.status == SectionStatus.loading
+                      ? const CircularProgressIndicator()
+                      : IconButton(
+                          onPressed: () {
+                            _adminSectionCubit.uploadImage(context);
+                          },
+                          icon: const Icon(Icons.upload));
                 },
               ),
               BlocBuilder<AdminSectionCubit, AdminSectionState>(

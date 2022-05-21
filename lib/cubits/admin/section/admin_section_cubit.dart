@@ -99,7 +99,8 @@ class AdminSectionCubit extends Cubit<AdminSectionState> {
     }
   }
 
-  Future<void> uploadImage() async {
+  Future<void> uploadImage(context) async {
+    if (state.status == SectionStatus.loading) return;
     emit(state.copyWith(status: SectionStatus.loading));
     try {
       await _adminRepository
@@ -110,10 +111,13 @@ class AdminSectionCubit extends Cubit<AdminSectionState> {
           .then((value) {
         imageUrlChanged(imageUrl: value);
         print("This is url $value");
-        emit(state.copyWith(status: SectionStatus.success));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Image uploaded successfully'),
+        ));
+        // emit(state.copyWith(status: SectionStatus.success));
       });
     } catch (e) {
-      emit(state.copyWith(status: SectionStatus.success));
+      // emit(state.copyWith(status: SectionStatus.success));
     }
   }
 }
