@@ -56,6 +56,24 @@ class Reply extends Equatable {
       downVotes: map['downvotes'],
       upVotedBy: map['upVotedBy']?.cast<String>(),
       downVotedBy: map['downVotedBy']?.cast<String>(),
+      jsonDescription: map['jsonDescription'],
+      qid: map['qid'], 
     );
+  }
+
+  // to map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'uid': uid,
+      'description': jsonEncode(description),
+      'date': date?.microsecondsSinceEpoch,
+      'upVotes': upVotes,
+      'downVotes': downVotes,
+      'upVotedBy': upVotedBy,
+      'downVotedBy': downVotedBy,
+      'qid': qid,
+      'jsonDescription': jsonDescription,
+    };
   }
 }

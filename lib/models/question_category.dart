@@ -14,11 +14,18 @@ class QuestionCategory extends Equatable {
   @override
   List<Object?> get props => [id, categoryName];
 
-   static QuestionCategory fromMap(Map<String, dynamic> map, id) {
+  static QuestionCategory fromMap(Map<String, dynamic> map, id) {
     return QuestionCategory(
       id: id ?? '',
-      
       categoryName: map['categoryName'],
     );
+  }
+
+  // to map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'categoryName': categoryName,
+    };
   }
 }

@@ -74,6 +74,7 @@ class Body extends StatelessWidget {
                     previous.email != current.email,
                 builder: (context, state) {
                   return RoundedInputField(
+                    key: const Key('loginEmail'),
                     hintText: "Your Email",
                     onChanged: (value) {
                       context.read<LoginCubit>().emailChanged(value);
@@ -86,6 +87,7 @@ class Body extends StatelessWidget {
                     previous.password != current.password,
                 builder: (context, state) {
                   return RoundedPasswordField(
+                    key: const Key('loginPassword'),
                     onChanged: (value) {
                       context.read<LoginCubit>().passwordChanged(value);
                     },
@@ -99,6 +101,7 @@ class Body extends StatelessWidget {
                   return state.status == LoginStatus.loading
                       ? const CircularProgressIndicator()
                       : RoundedButton(
+                        key: const Key('loginButton'),
                           text: "LOGIN",
                           press: () {
                             context
@@ -110,6 +113,7 @@ class Body extends StatelessWidget {
               ),
               SizedBox(height: size.height * 0.03),
               AlreadyHaveAnAccountCheck(
+                key: const Key('registerScreen'),
                 press: () {
                   Navigator.pop(context);
                   Navigator.of(context).push(

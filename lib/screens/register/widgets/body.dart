@@ -80,6 +80,7 @@ class Body extends StatelessWidget {
                 buildWhen: (previous, current) => previous.name != current.name,
                 builder: (context, state) {
                   return RoundedInputField(
+                    key: Key('registerName'),
                     icon: Icons.person,
                     hintText: "Your Name",
                     onChanged: (value) {
@@ -93,6 +94,7 @@ class Body extends StatelessWidget {
                     previous.phone != current.phone,
                 builder: (context, state) {
                   return RoundedInputField(
+                    key: Key('registerPhone'),
                     icon: Icons.phone,
                     hintText: "Your Phone",
                     onChanged: (value) {
@@ -105,6 +107,7 @@ class Body extends StatelessWidget {
                 buildWhen: (previous, current) => previous.dob != current.dob,
                 builder: (context, state) {
                   return RoundedInputField(
+                    key: Key('registerDob'),
                     icon: Icons.date_range,
                     hintText: "Your DOB (DD/MM/YYYY)",
                     onChanged: (value) {
@@ -120,6 +123,7 @@ class Body extends StatelessWidget {
                   return state.status == RegisterStatus.loading
                       ? const CircularProgressIndicator()
                       : RoundedInputField(
+                          key: Key('registerEmail'),
                           icon: Icons.email,
                           hintText: "Your Email",
                           onChanged: (value) {
@@ -133,6 +137,7 @@ class Body extends StatelessWidget {
                     previous.password != current.password,
                 builder: (context, state) {
                   return RoundedPasswordField(
+                    key: Key('registerPassword'),
                     onChanged: (value) {
                       context.read<RegisterCubit>().passwordChanged(value);
                     },
@@ -146,6 +151,7 @@ class Body extends StatelessWidget {
                   return state.status == RegisterStatus.loading
                       ? const CircularProgressIndicator()
                       : RoundedButton(
+                          key: Key('signUpButton'),
                           text: "SIGNUP",
                           press: () {
                             context

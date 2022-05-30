@@ -24,4 +24,13 @@ class Section extends Equatable {
       name: map['sectionName'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'sectionName': name,
+      'categoryId': category,
+      'imageUrl': imageUrl,
+    };
+  }
 }
