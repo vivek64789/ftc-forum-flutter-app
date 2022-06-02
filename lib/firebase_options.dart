@@ -53,12 +53,10 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBhz-TlFN7UzaRa4osswRj55KY9YR2w8Ow',
-    appId: '1:138011552580:android:90263dcc628e8bd0cc4511',
-    messagingSenderId: '138011552580',
-    projectId: 'ftc-forum',
-    databaseURL:
-        'https://ftc-forum-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'ftc-forum.appspot.com',
+    apiKey: 'AIzaSyBeHIH4aMMkv4EP_PHzvHXMzOpgtn7OYAk',
+    appId: '1:646267544705:android:1208e10387b1da64175980',
+    messagingSenderId: '646267544705',
+    projectId: 'ftc-forum-cc0a9',
+    storageBucket: 'ftc-forum-cc0a9.appspot.com',
   );
 }
